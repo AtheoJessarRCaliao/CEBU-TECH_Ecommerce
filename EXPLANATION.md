@@ -163,7 +163,43 @@ erDiagram
 
 ---
 
-## 3. Known Issues
+## 3. Codebase File & Folder Organization Architecture
+
+The project employs an industry-standard layered architecture enforcing clear separation of concerns, defensive security boundaries, and modular reusability:
+
+```text
+Cebu-Tech-Ecommmerce/
+├── app/                  # APPLICATION CORE TIER (Private, outside web root)
+│   ├── Config/           # Application bootstrap, constants, session & CSRF helpers
+│   ├── Core/             # Domain logic: Auth, Cart, Repository (SQLite PDO & JSON)
+│   └── Views/            # Shared presentation layouts and partial components
+├── database/             # RELATIONAL SCHEMA & SEED TIER (DDL & DML source files)
+├── public/               # WEB PRESENTATION TIER (Public web document root)
+│   ├── admin/            # Protected administrative modules
+│   └── assets/           # Client assets (CSS stylesheets, Vanilla JS, photography)
+├── scripts/              # AUTOMATION TIER (CLI maintenance & DB re-seeding)
+├── storage/              # PERSISTENCE TIER (Isolated runtime SQLite data stores)
+├── tests/                # VERIFICATION TIER (Automated acceptance check runner)
+├── .gitignore            # Git exclusion rules for runtime files and uploads
+├── EXPLANATION.md        # Technical explanation, data models, and disclosures
+├── README.md             # Complete user guide, run steps, and routes index
+└── start-server.bat      # Windows one-click server starter script
+```
+
+### 3.1 Architectural Principles
+1. **Public Web Root Isolation (`public/`)**:
+   - The web server is pointed strictly to `public/` (`php -S localhost:8000 -t public`).
+   - Sensitive application code in `app/`, database definitions in `database/`, storage files in `storage/`, and test scripts in `tests/` cannot be directly accessed by web browsers via URL manipulation.
+2. **Single Responsibility in `app/Core/`**:
+   - `Auth.php`: Exclusively handles demo session state and route protection.
+   - `Cart.php`: Manages session and HMAC cookie persistence, duplicate line merging, and centavo subtotal sums.
+   - `Repository.php`: Acts as the single point of truth for all data queries, transactions, concurrency re-checks, and fallback engine switching.
+3. **DRY View Templating in `app/Views/`**:
+   - Header and footer layouts are defined once and reused across all customer and admin pages, ensuring consistent branding, responsive navigation, and unified feedback styling.
+
+---
+
+## 4. Known Issues
 
 Across comprehensive automated and manual verification, **zero blocking defects or functional anomalies exist**. All edge cases are handled predictably:
 
@@ -178,7 +214,7 @@ Across comprehensive automated and manual verification, **zero blocking defects 
 
 ---
 
-## 4. Unfinished Requirements
+## 5. Unfinished Requirements
 
 **None.** Every requirement outlined in the CubeTech Innovations assessment specification (Sections 01 through 17) has been fully implemented, styled, and verified.
 
@@ -198,11 +234,11 @@ Across comprehensive automated and manual verification, **zero blocking defects 
 
 ---
 
-## 5. Disclosure of AI Tools, Templates, and Tutorials
+## 6. Disclosure of AI Tools, Templates, and Tutorials
 
 In accordance with academic and corporate integrity guidelines, the tools and resources used during development are disclosed below:
 
-### 5.1 AI Tools
+### 6.1 AI Tools
 - **Google Antigravity (Powered by Google DeepMind)**:
   - Used as an AI pair-programming assistant for:
     - Designing the clean relational schema (`database/schema.sql`) and sample seed datasets (`database/seed.sql`).
@@ -211,13 +247,13 @@ In accordance with academic and corporate integrity guidelines, the tools and re
     - Authoring the automated CLI acceptance test suite (`tests/acceptance_checks.php`).
     - Developing modern responsive CSS components (splash activity animation, sticky 56px mobile app bar, 2-column mobile product cards, and `.feedback-card`).
 
-### 5.2 Templates & Starter Kits
+### 6.2 Templates & Starter Kits
 - **No Third-Party CSS/JS Frameworks or Boilerplates Used**:
   - The application was built from scratch without Bootstrap, Tailwind CSS, jQuery, or frontend meta-frameworks.
   - All styling is authored in custom Vanilla CSS3 (`public/assets/css/style.css`), leveraging modern CSS Grid, Flexbox, custom design tokens, and media queries.
   - All interactivity is authored in Vanilla JavaScript (`public/assets/js/app.js`), featuring native HTML5 `<dialog>` modals and the `window.CebuToast` notification manager.
 
-### 5.3 Tutorials & Reference Documentation
+### 6.3 Tutorials & Reference Documentation
 - **PHP Official Manual (`php.net`)**:
   - PDO SQLite connection handling, prepared statements, and transaction demarcation (`beginTransaction`, `commit`, `rollBack`).
   - Session cookie parameters and cryptographic hashing (`hash_hmac`).
@@ -229,4 +265,3 @@ In accordance with academic and corporate integrity guidelines, the tools and re
   - CSS Grid auto-fit and minmax sizing patterns for mobile-friendly cards.
 - **Photography Assets**:
   - Authentic product photography sourced from Unsplash under the Unsplash open commercial license, optimized and stored locally at `public/assets/images/*.jpg`.
-

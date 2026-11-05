@@ -280,7 +280,7 @@ class Cart
                     'name'                 => $live['name'] ?? $snapshotName,
                     'slug'                 => $live['slug'] ?? '',
                     'category_name'        => $live['category_name'] ?? 'Unavailable',
-                    'image_url'            => $live['image_url'] ?? 'assets/images/prod-legacy-trackball.svg',
+                    'image_url'            => $live['image_url'] ?? 'assets/images/prod-legacy-trackball.jpg',
                     'unit_price_cents'     => $live ? $live['price_cents'] : $snapshotPriceCents,
                     'snapshot_price_cents' => $snapshotPriceCents,
                     'quantity'             => $qty,

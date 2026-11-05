@@ -53,6 +53,8 @@ CebuTech Hub provides an end-to-end e-commerce experience tailored to both deskt
   - Stock is restored to inventory **exactly once** (`stock_restored = 1`) upon cancellation and guarded against duplicate restocks.
 - **Customer Summary (`admin/customers.php`)**:
   - Read-only customer roster derived from orders grouped by normalized email (`LOWER(TRIM(email))`), displaying the latest contact information, total order count, and lifetime completed spend.
+- **Activity & Inventory Notifications (`admin/notifications.php`)**:
+  - Real-time event log tracking inventory adjustments, zero-stock warnings, and order status transitions with unread counter.
 - **Unified Feedback System**:
   - Visual feedback cards (`.feedback-card`) for contextual warnings and blocked operations.
   - Animated progress bars (`.alert-timer-bar`) on flash notifications.
@@ -61,7 +63,82 @@ CebuTech Hub provides an end-to-end e-commerce experience tailored to both deskt
 
 ---
 
-## 2. Technologies
+## 2. Project File & Folder Structure
+
+The project strictly follows professional separation-of-concerns principles. Sensitive application logic, database schemas, and persistent storage are isolated outside the public web root (`public/`), ensuring secure and organized modularity:
+
+```text
+Cebu-Tech-Ecommmerce/
+│
+├── app/                                  # CORE BACKEND LOGIC (Isolated outside web document root)
+│   ├── Config/
+│   │   └── config.php                    # Application constants, paths, session, centavo & CSRF helpers
+│   ├── Core/
+│   │   ├── Auth.php                      # Admin authentication guard & demo session manager
+│   │   ├── Cart.php                      # Persistent shopping cart (Session + HMAC-signed cookie)
+│   │   └── Repository.php                # Data Access Layer: SQLite 3 (PDO) & JSON fallback
+│   └── Views/                            # Shared reusable UI presentation templates
+│       ├── layouts/                      # Global structural layout headers and footers
+│       │   ├── admin_header.php          # Responsive admin topbar & navigation drawer
+│       │   ├── admin_footer.php          # Admin closing scripts and toast container
+│       │   ├── customer_header.php       # Storefront navigation bar & live cart counter
+│       │   └── customer_footer.php       # Streamlined 3-column minimal customer footer
+│       └── partials/                     # Reusable modular view components
+│           └── product_card.php          # Shared responsive product card (2-col mobile ready)
+│
+├── database/                             # RELATIONAL SCHEMA & SEED SPECIFICATIONS
+│   ├── schema.sql                        # SQLite 3 DDL schema (foreign keys, check constraints, indexes)
+│   └── seed.sql                          # Initial seed dataset (3 categories, 12 products, 3 sample orders)
+│
+├── public/                               # WEB DOCUMENT ROOT (Target of php -S server)
+│   ├── index.php                         # Customer: Storefront home page with hero & categories
+│   ├── products.php                      # Customer: Product catalog (Search / Filter / Sort)
+│   ├── product.php                       # Customer: Product details & related recommendations
+│   ├── cart.php                          # Customer: Persistent shopping cart with PHP 325.50 test action
+│   ├── checkout.php                      # Customer: Checkout form & live concurrency re-validator
+│   ├── confirmation.php                  # Customer: Order confirmation receipt & summary
+│   ├── track.php                         # Customer: Self-service order lookup by reference number
+│   ├── favicon.ico                       # Website browser icon
+│   │
+│   ├── admin/                            # ADMIN DASHBOARD ENDPOINTS (Guarded by Auth::requireAdmin)
+│   │   ├── index.php                     # Admin: Metrics overview & 5 summary statistics cards
+│   │   ├── login.php                     # Admin: Startup splash activity & demo sign-in
+│   │   ├── logout.php                    # Admin: Session termination
+│   │   ├── products.php                  # Admin: Product CRUD with relational deletion protection
+│   │   ├── categories.php                # Admin: Category CRUD & assignment verification
+│   │   ├── orders.php                    # Admin: Order roster (newest first)
+│   │   ├── order.php                     # Admin: Order detail view & strict state transition machine
+│   │   ├── customers.php                 # Admin: Derived customer directory (normalized emails)
+│   │   └── notifications.php             # Admin: Live activity feed & inventory alerts
+│   │
+│   └── assets/                           # STATIC FRONTEND ASSETS
+│       ├── css/
+│       │   └── style.css                 # Master stylesheet (375px mobile to 1280px+ desktop)
+│       ├── js/
+│       │   └── app.js                    # Vanilla JS: drawer navigation, CebuToast, modal dialogs
+│       └── images/                       # Local authentic JPG photography & SVG vector fallbacks
+│           ├── Cebu-Logo.png             # Official CebuTech brand emblem
+│           └── prod-*.jpg                # 12 authentic hardware product photographs
+│
+├── scripts/                              # AUTOMATION & MAINTENANCE UTILITIES
+│   └── seed_and_assets.php               # CLI database reset, re-seeder & asset generator
+│
+├── storage/                              # PERSISTENT LOCAL DATA STORES (Git-ignored)
+│   ├── .gitkeep                          # Git retention placeholder
+│   └── cebutech.sqlite                   # Active SQLite 3 database file
+│
+├── tests/                                # AUTOMATED ACCEPTANCE TEST SUITE
+│   └── acceptance_checks.php             # Section 17 verification runner (Checks 01 through 10)
+│
+├── .gitignore                            # Excludes runtime sqlite, json, and upload artifacts
+├── EXPLANATION.md                        # Architecture, data model diagrams, known issues & AI disclosure
+├── README.md                             # Comprehensive project documentation & user manual
+└── start-server.bat                      # Windows one-click local server launcher
+```
+
+---
+
+## 3. Technologies
 
 - **Backend**:
   - **PHP 8.0+** (`strict_types=1`, modern object-oriented architecture, native PDO)
@@ -82,7 +159,7 @@ CebuTech Hub provides an end-to-end e-commerce experience tailored to both deskt
 
 ---
 
-## 3. Chosen Storage Approach and Limitations
+## 4. Chosen Storage Approach and Limitations
 
 ### Chosen Approach
 - **Primary Engine**: **SQLite 3 via PDO** stored at `storage/cebutech.sqlite`.
@@ -101,7 +178,7 @@ CebuTech Hub provides an end-to-end e-commerce experience tailored to both deskt
 
 ---
 
-## 4. Install / Run Steps
+## 5. Install / Run Steps
 
 ### Prerequisites
 - **PHP 8.0 or newer** (CLI executable available in system PATH).
@@ -145,7 +222,7 @@ CebuTech Hub provides an end-to-end e-commerce experience tailored to both deskt
 
 ---
 
-## 5. Environment Placeholders
+## 6. Environment Placeholders
 
 No external `.env` file or complex setup is required to run CebuTech Hub. All defaults are configured in `app/Config/config.php`.
 
@@ -180,7 +257,7 @@ php -S localhost:8000 -t public
 
 ---
 
-## 6. Seed / Reset Instructions
+## 7. Seed / Reset Instructions
 
 The database comes pre-seeded with **3 categories**, **12 distinct products** (including real photography, active items, an out-of-stock item `#4`, and an inactive legacy item `#12`), and **3 sample historical orders** demonstrating various fulfillment stages.
 
@@ -199,7 +276,7 @@ php scripts/seed_and_assets.php --reset-db
 
 ---
 
-## 7. Customer / Admin Routes
+## 8. Customer / Admin Routes
 
 ### Customer Routes
 | Route | Method | Description |
@@ -223,10 +300,11 @@ php scripts/seed_and_assets.php --reset-db
 | `/admin/orders.php` | `GET` | Filterable list of all orders displayed newest-first |
 | `/admin/order.php?id={id}` | `GET`, `POST` | Order detail view with immutable item snapshots and strict status machine |
 | `/admin/customers.php` | `GET` | Derived customer directory grouped by normalized email (`LOWER(TRIM)`) |
+| `/admin/notifications.php` | `GET`, `POST` | Activity monitoring log and inventory notifications feed |
 
 ---
 
-## 8. Demo Credentials
+## 9. Demo Credentials
 
 The Admin Dashboard is protected by a simulated authentication guard (`app/Core/Auth.php`).
 
@@ -241,7 +319,7 @@ The Admin Dashboard is protected by a simulated authentication guard (`app/Core/
 
 ---
 
-## 9. Key Testing & Evaluation Scenarios
+## 10. Key Testing & Evaluation Scenarios
 
 | Test Case | How to Test | Expected Behavior |
 |---|---|---|
@@ -256,7 +334,7 @@ The Admin Dashboard is protected by a simulated authentication guard (`app/Core/
 
 ---
 
-## 10. Automated Acceptance Test Suite (Section 17)
+## 11. Automated Acceptance Test Suite (Section 17)
 
 Run the automated verification suite from the project root:
 ```bash

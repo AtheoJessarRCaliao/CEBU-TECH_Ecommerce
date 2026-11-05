@@ -9,18 +9,18 @@ $repo = Repository::getInstance();
 $categories = $repo->getCategories();
 
 $bundledImages = [
-    'assets/images/prod-k75-keyboard.svg'     => 'Bundled: K75 Mechanical Keyboard',
-    'assets/images/prod-k65-keyboard.svg'     => 'Bundled: K65 Wireless Keyboard',
-    'assets/images/prod-m1-mouse.svg'         => 'Bundled: M1 Ergonomic Mouse',
-    'assets/images/prod-aerolight-mouse.svg'  => 'Bundled: AeroLight Gaming Mouse',
-    'assets/images/prod-nova-headphones.svg'  => 'Bundled: Nova ANC Headphones',
-    'assets/images/prod-pulse-mic.svg'        => 'Bundled: Pulse USB-C Microphone',
-    'assets/images/prod-clarity-soundbar.svg' => 'Bundled: Clarity Desktop Soundbar',
-    'assets/images/prod-sonicbuds.svg'        => 'Bundled: SonicBuds Pro Earbuds',
-    'assets/images/prod-usbc-cable.svg'       => 'Bundled: Braided USB-C Cable',
-    'assets/images/prod-keycap-kit.svg'       => 'Bundled: Keycap Puller & Brush Kit',
-    'assets/images/prod-usbc-hub.svg'         => 'Bundled: 7-in-1 Aluminum USB-C Hub',
-    'assets/images/prod-legacy-trackball.svg' => 'Bundled: Legacy Trackball',
+    'assets/images/prod-k75-keyboard.jpg'     => 'Bundled: K75 Mechanical Keyboard',
+    'assets/images/prod-k65-keyboard.jpg'     => 'Bundled: K65 Wireless Keyboard',
+    'assets/images/prod-m1-mouse.jpg'         => 'Bundled: M1 Ergonomic Mouse',
+    'assets/images/prod-aerolight-mouse.jpg'  => 'Bundled: AeroLight Gaming Mouse',
+    'assets/images/prod-nova-headphones.jpg'  => 'Bundled: Nova ANC Headphones',
+    'assets/images/prod-pulse-mic.jpg'        => 'Bundled: Pulse USB-C Microphone',
+    'assets/images/prod-clarity-soundbar.jpg' => 'Bundled: Clarity Desktop Soundbar',
+    'assets/images/prod-sonicbuds.jpg'        => 'Bundled: SonicBuds Pro Earbuds',
+    'assets/images/prod-usbc-cable.jpg'       => 'Bundled: Braided USB-C Cable',
+    'assets/images/prod-keycap-kit.jpg'       => 'Bundled: Keycap Puller & Brush Kit',
+    'assets/images/prod-usbc-hub.jpg'         => 'Bundled: 7-in-1 Aluminum USB-C Hub',
+    'assets/images/prod-legacy-trackball.jpg' => 'Bundled: Legacy Trackball',
 ];
 
 $formErrors           = [];
@@ -35,7 +35,7 @@ $formData = [
     'description' => '',
     'price'       => '',
     'stock'       => '10',
-    'image_url'   => 'assets/images/prod-k75-keyboard.svg',
+    'image_url'   => 'assets/images/prod-k75-keyboard.jpg',
     'is_active'   => '1',
     'is_featured' => '0',
 ];
@@ -320,7 +320,7 @@ require_once __DIR__ . '/../../app/Views/layouts/admin_header.php';
                         name="image_url"
                         class="form-control"
                         list="bundled-images-list"
-                        placeholder="assets/images/prod-k75-keyboard.svg or https://..."
+                        placeholder="assets/images/prod-k75-keyboard.jpg or https://..."
                         value="<?= e($formData['image_url']) ?>"
                         required
                     >
