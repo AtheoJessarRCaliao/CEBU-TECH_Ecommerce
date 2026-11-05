@@ -130,7 +130,9 @@ Cebu-Tech-Ecommmerce/
 ├── tests/                                # AUTOMATED ACCEPTANCE TEST SUITE
 │   └── acceptance_checks.php             # Section 17 verification runner (Checks 01 through 10)
 │
+├── .dockerignore                         # Docker build exclusion rules
 ├── .gitignore                            # Excludes runtime sqlite, json, and upload artifacts
+├── Dockerfile                            # Production container for cloud deployment (Render.com)
 ├── EXPLANATION.md                        # Architecture, data model diagrams, known issues & AI disclosure
 ├── README.md                             # Comprehensive project documentation & user manual
 └── start-server.bat                      # Windows one-click local server launcher
@@ -219,6 +221,16 @@ Cebu-Tech-Ecommmerce/
    ```bash
    php tests/acceptance_checks.php
    ```
+
+### Cloud Deployment (Render.com)
+
+Render uses **Docker** to run PHP applications:
+
+1. Sign in to [Render.com](https://render.com) and click **New +** $\rightarrow$ **Web Service**.
+2. Connect your GitHub repository: `AtheoJessarRCaliao/CEBU-TECH_Ecommerce`.
+3. Select **Docker** as the **Runtime / Language** (Render automatically detects the repository's `Dockerfile`).
+4. Select the **Free** instance type.
+5. Click **Create Web Service**. Render will automatically build the container, install SQLite PDO, seed the database, and assign a live HTTPS URL.
 
 ---
 

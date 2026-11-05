@@ -1,0 +1,7 @@
+.git
+storage/*.sqlite
+storage/*.sqlite-journal
+storage/*.sqlite-wal
+storage/*.sqlite-shm
+storage/*.json
+public/assets/images/prod-upload-*
