@@ -91,9 +91,6 @@ Cebu-Tech-Ecommmerce/
 │   ├── seed.sql                          # Initial seed dataset (3 categories, 12 products, 3 sample orders)
 │   └── supabase_schema.sql               # Cloud-ready PostgreSQL schema & seeds for Supabase
 │
-├── docs/                                 # SYSTEM DOCUMENTATION TIER
-│   └── EXPLANATION.md                    # In-depth architectural explanation and technical analysis
-│
 ├── public/                               # WEB DOCUMENT ROOT (Target of php -S server)
 │   ├── index.php                         # Customer: Storefront home page with hero & categories
 │   ├── products.php                      # Customer: Product catalog (Search / Filter / Sort)
@@ -137,7 +134,6 @@ Cebu-Tech-Ecommmerce/
 ├── .dockerignore                         # Docker build exclusion rules
 ├── .gitignore                            # Excludes runtime sqlite, json, and upload artifacts
 ├── Dockerfile                            # Production container for cloud deployment (Render.com)
-├── EXPLANATION.md                        # Root architecture overview & pointer to docs/
 ├── README.md                             # Comprehensive project documentation & user manual
 └── start-server.bat                      # Windows one-click local server launcher
 ```
