@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 17: Test Log — CubeTech Hub</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 14mm 14mm 14mm 14mm;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            background: #ffffff;
+            font-size: 11pt;
+            line-height: 1.5;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .header {
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .brand-title {
+            font-size: 20pt;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+        .brand-subtitle {
+            font-size: 11pt;
+            color: #2563eb;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        .meta-box {
+            text-align: right;
+            font-size: 9pt;
+            color: #64748b;
+            line-height: 1.4;
+        }
+        .meta-box strong {
+            color: #334155;
+        }
+        .badge-overall {
+            display: inline-block;
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 9.5pt;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+        .card-label {
+            font-size: 7.5pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        .card-value {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.2pt;
+            margin-top: 8px;
+        }
+        thead {
+            background: #0f172a;
+            color: #ffffff;
+        }
+        th {
+            padding: 9px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 8.5pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        th.center, td.center {
+            text-align: center;
+        }
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+            line-height: 1.45;
+        }
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        tr {
+            page-break-inside: avoid;
+        }
+        .check-id {
+            font-weight: 700;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            color: #475569;
+            font-size: 9.5pt;
+        }
+        .check-title {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+        .pass-badge {
+            display: inline-block;
+            background: #16a34a;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 8pt;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+        .note-text {
+            color: #334155;
+            font-size: 8.8pt;
+        }
+        .footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8pt;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <div class="brand-title">CubeTech Hub</div>
+            <div class="brand-subtitle">Section 17: Acceptance Test Log</div>
+        </div>
+        <div class="meta-box">
+            <div><strong>Environment:</strong> PHP 8.3 &bull; SQLite 3 (PDO)</div>
+            <div><strong>Timezone:</strong> Asia/Manila (GMT+8)</div>
+            <div><strong>Suite:</strong> tests/acceptance_checks.php</div>
+            <div><span class="badge-overall">&check; ALL 10 CHECKS PASSED (100%)</span></div>
+        </div>
+    </div>
+
+    <div class="overview-cards">
+        <div class="card">
+            <div class="card-label">Total Checks</div>
+            <div class="card-value">10 Scenarios</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Passed</div>
+            <div class="card-value" style="color: #16a34a;">10 Passed</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Failed</div>
+            <div class="card-value" style="color: #64748b;">0 Failed</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Execution Status</div>
+            <div class="card-value" style="color: #2563eb;">Automated &amp; Verified</div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 6%;" class="center">ID</th>
+                <th style="width: 32%;">Acceptance Check Description</th>
+                <th style="width: 10%;" class="center">Result</th>
+                <th style="width: 52%;">Verification Detail &amp; Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="center check-id">01</td>
+                <td>
+                    <div class="check-title">Catalog Filtering, Search &amp; Sorting</div>
+                    Search, category filter, and both price sorts work together. No-match and invalid product states are handled.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Multi-parameter query verification passes. Search strings, category IDs, and price sorting (asc/desc) execute concurrently. Empty queries surface a clean zero-item state. Inactive item (#12 CubeTech Legacy Trackball Pro) is excluded from customer listings and direct URLs. Zero-stock item (#4 AeroLight 55g Gaming Mouse) displays an Out of Stock badge with disabled actions.
+                </td>
+            </tr>
+            <tr>
+                <td class="center check-id">02</td>
+                <td>
+                    <div class="check-title">Cart Merging &amp; Centavo Arithmetic</div>
+                    Cart merges duplicate products, persists after refresh, and calculates the PHP 325.50 example correctly.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Adding repeated items increments existing line quantities without creating duplicate rows. Session and HMAC cookie persistence verified across browser restarts. Integer centavo arithmetic eliminates floating-point rounding errors: 2 &times; PHP 120.00 + 1 &times; PHP 85.50 = PHP 325.50 exact match.
+                </td>
+            </tr>
+            <tr>
+                <td class="center check-id">03</td>
+                <td>
+                    <div class="check-title">Input Validation &amp; Quantity Boundaries</div>
+                    Empty checkout, invalid customer fields, and invalid/excessive quantities are blocked.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Empty cart submissions are blocked. Server-side validation rejects blank names, malformed emails, non-Philippine phone numbers, and missing addresses. Negative (&minus;2), non-integer (1.5), and excessive quantities exceeding warehouse stock (999 &gt; 12) are intercepted and rejected.
+                </td>
+            </tr>
+            <tr>
+                <td class="center check-id">04</td>
+                <td>
+                    <div class="check-title">Checkout Concurrency &amp; Snapshot Guard</div>
+                    Inactive/out-of-stock items cannot be ordered. Checkout detects price or availability changes before saving.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Inactive and out-of-stock items are blocked from insertion. Live transactional verification checks inventory and unit price before writing order headers. If price changes occur during an active session (PHP 100.00 &rarr; PHP 120.00), checkout halts, updates the cart snapshot, and notifies the user.
+                </td>
+            </tr>
+            <tr>
+                <td class="center check-id">05</td>
+                <td>
+                    <div class="check-title">Order Placement &amp; Inventory Synchronization</div>
+                    A successful order shows confirmation, appears in admin, reduces stock, and clears the cart. Failed saves preserve the cart.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Successful order commits inside an ACID transaction with unique number (ORD-YYYYMMDD-XXXX). Product inventory decrements atomically (e.g. stock reduces from 25 to 23), shopping cart is cleared, and receipt is rendered. Simulated failures trigger a full rollback, preserving the cart intact.
+                </td>
+            </tr>
+            <tr>
+                <td class="center check-id">06</td>
+                <td>
+                    <div class="check-title">Admin CRUD &amp; Relational Deletion Protection</div>
+                    Admin product/category changes appear on the customer site after refresh. Referenced records cannot be deleted.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Admin modifications reflect immediately on the storefront. Case-insensitive duplicate categories are blocked. SQLite ON DELETE RESTRICT prevents deleting categories with assigned products or products with order history, presenting a 1-click &ldquo;Mark as Inactive Instead&rdquo; safeguard.
+                </td>
+            </tr>
+            <tr>
+                <td class="center check-id">07</td>
+                <td>
+                    <div class="check-title">Order State Machine &amp; Stock Restoration</div>
+                    Valid statuses save; invalid transitions fail. Eligible cancellation restores stock once, including after refresh.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Enforces strict sequential progression: Pending &rarr; Confirmed &rarr; Preparing &rarr; Shipped &rarr; Completed. Regressions and skipped transitions are rejected. Customer and admin cancellation is permitted only from Pending or Confirmed, returning stock atomically exactly once (stock_restored = 1). Repeated cancellation is rejected.
+                </td>
+            </tr>
+            <tr>
+                <td class="center check-id">08</td>
+                <td>
+                    <div class="check-title">Sales Metrics &amp; Customer Deduplication</div>
+                    Completed-order totals and unique-email customer counts match the underlying orders.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Sales KPI card aggregates total_cents strictly for orders in Completed status, excluding pending and cancelled transactions. Unique customer roster groups by LOWER(TRIM(email)) to deduplicate case variants. Maria verified with 2 orders, updated contact details, and exact PHP 3,739.00 sales total.
+                </td>
+            </tr>
+            <tr>
+                <td class="center check-id">09</td>
+                <td>
+                    <div class="check-title">Historical Snapshot Immutability</div>
+                    Existing order prices/names remain unchanged after product edits. Data persists as described for the chosen approach.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Historical orders write product_name_snapshot and unit_price_cents_snapshot to order_items. Editing Product #9&rsquo;s title and raising price to PHP 199.00 leaves historical order receipts intact with original title and PHP 120.00 unit price.
+                </td>
+            </tr>
+            <tr>
+                <td class="center check-id">10</td>
+                <td>
+                    <div class="check-title">Responsive Design &amp; Viewport Verification</div>
+                    Customer/admin screens work at approximately 375 px and 1280 px widths. No clipped controls, horizontal page scrolling, or major console errors.
+                </td>
+                <td class="center"><span class="pass-badge">PASS</span></td>
+                <td class="note-text">
+                    Verified at 375px mobile and 1280px desktop viewports. Product catalog dynamically reformats into a 2-column mobile grid. Admin navigation collapses to a 56px sticky app bar with drawer toggle. Tables convert to stacked card layouts. Zero horizontal scrolling (overflow-x: hidden) and clean console output.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <div>CubeTech Hub &bull; Web Development Internship Assessment &bull; Automated Acceptance Suite</div>
+        <div>Generated: Manila, Philippines &bull; All 10 Checks Verified</div>
+    </div>
+
+</body>
+</html>
