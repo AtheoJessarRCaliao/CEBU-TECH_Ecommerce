@@ -19,3 +19,4 @@ EXPOSE 10000
 
 # Auto-seed database on start and run the PHP server on Render's dynamic $PORT
 CMD ["sh", "-c", "php scripts/seed_and_assets.php --reset-db && php -S 0.0.0.0:${PORT:-10000} -t public"]
+

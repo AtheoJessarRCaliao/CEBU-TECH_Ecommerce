@@ -137,13 +137,14 @@ class Repository
         try {
             $stmt = $this->pdo->prepare("
                 INSERT INTO activity_notifications (type, title, message, link, is_read, created_at)
-                VALUES (:type, :title, :message, :link, 0, CURRENT_TIMESTAMP)
+                VALUES (:type, :title, :message, :link, 0, :created_at)
             ");
             $stmt->execute([
-                ':type'    => $type,
-                ':title'   => $title,
-                ':message' => $message,
-                ':link'    => $link,
+                ':type'       => $type,
+                ':title'      => $title,
+                ':message'    => $message,
+                ':link'       => $link,
+                ':created_at' => date('Y-m-d H:i:s'),
             ]);
         } catch (Throwable $e) {
             // Non-critical logging failure
@@ -590,9 +591,10 @@ class Repository
         }
 
         if ($id === null) {
+            $now = date('Y-m-d H:i:s');
             $stmt = $this->pdo->prepare("
                 INSERT INTO products (category_id, name, slug, description, price_cents, stock, is_active, is_featured, image_url, created_at, updated_at)
-                VALUES (:category_id, :name, :slug, :description, :price_cents, :stock, :is_active, :is_featured, :image_url, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                VALUES (:category_id, :name, :slug, :description, :price_cents, :stock, :is_active, :is_featured, :image_url, :created_at, :updated_at)
             ");
             $stmt->execute([
                 ':category_id' => $categoryId,
@@ -604,6 +606,8 @@ class Repository
                 ':is_active'   => $isActive,
                 ':is_featured' => $isFeatured,
                 ':image_url'   => $imageUrl,
+                ':created_at'  => $now,
+                ':updated_at'  => $now,
             ]);
             $newId = (int)$this->pdo->lastInsertId();
             $this->addNotification('product', 'Product Created', "New product \"{$name}\" was added with stock {$stock}.", "products.php?search=" . urlencode($name));
@@ -613,6 +617,7 @@ class Repository
             if (!$existing) {
                 return ['success' => false, 'errors' => ['Product not found.']];
             }
+            $now = date('Y-m-d H:i:s');
             $stmt = $this->pdo->prepare("
                 UPDATE products
                 SET category_id = :category_id,
@@ -624,7 +629,7 @@ class Repository
                     is_active = :is_active,
                     is_featured = :is_featured,
                     image_url = :image_url,
-                    updated_at = CURRENT_TIMESTAMP
+                    updated_at = :updated_at
                 WHERE id = :id
             ");
             $stmt->execute([
@@ -637,6 +642,7 @@ class Repository
                 ':is_active'   => $isActive,
                 ':is_featured' => $isFeatured,
                 ':image_url'   => $imageUrl,
+                ':updated_at'  => $now,
                 ':id'          => $id,
             ]);
 
@@ -695,8 +701,9 @@ class Repository
             return $this->jsonDeactivateProduct($id);
         }
 
-        $stmt = $this->pdo->prepare("UPDATE products SET is_active = 0, updated_at = CURRENT_TIMESTAMP WHERE id = :id");
-        $stmt->execute([':id' => $id]);
+        $now = date('Y-m-d H:i:s');
+        $stmt = $this->pdo->prepare("UPDATE products SET is_active = 0, updated_at = :updated_at WHERE id = :id");
+        $stmt->execute([':updated_at' => $now, ':id' => $id]);
 
         $this->addNotification('product', 'Product Deactivated', "Product \"{$product['name']}\" was marked as Inactive (hidden from customers).", "products.php?status_filter=inactive");
 
@@ -714,8 +721,9 @@ class Repository
             return $this->jsonActivateProduct($id);
         }
 
-        $stmt = $this->pdo->prepare("UPDATE products SET is_active = 1, updated_at = CURRENT_TIMESTAMP WHERE id = :id");
-        $stmt->execute([':id' => $id]);
+        $now = date('Y-m-d H:i:s');
+        $stmt = $this->pdo->prepare("UPDATE products SET is_active = 1, updated_at = :updated_at WHERE id = :id");
+        $stmt->execute([':updated_at' => $now, ':id' => $id]);
 
         $this->addNotification('product', 'Product Activated', "Product \"{$product['name']}\" was marked Active and is now visible on the customer storefront.", "products.php?status_filter=in_stock");
 
@@ -880,6 +888,7 @@ class Repository
 
             // Generate unique order number
             $orderNumber = $this->generateUniqueOrderNumber();
+            $now = date('Y-m-d H:i:s');
 
             $stmtOrder = $this->pdo->prepare("
                 INSERT INTO orders (
@@ -889,7 +898,7 @@ class Repository
                 ) VALUES (
                     :order_number, :customer_name, :customer_email, :normalized_email,
                     :contact_number, :delivery_address, :payment_method, :order_notes,
-                    :subtotal_cents, :total_cents, 'Pending', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+                    :subtotal_cents, :total_cents, 'Pending', 0, :created_at, :updated_at
                 )
             ");
             $stmtOrder->execute([
@@ -903,6 +912,8 @@ class Repository
                 ':order_notes'      => $clean['order_notes'],
                 ':subtotal_cents'   => $subtotalCents,
                 ':total_cents'      => $totalCents,
+                ':created_at'       => $now,
+                ':updated_at'       => $now,
             ]);
 
             $orderId = (int)$this->pdo->lastInsertId();
@@ -919,7 +930,7 @@ class Repository
 
             $stmtStock = $this->pdo->prepare("
                 UPDATE products
-                SET stock = stock - :qty, updated_at = CURRENT_TIMESTAMP
+                SET stock = stock - :qty, updated_at = :updated_at
                 WHERE id = :product_id AND stock >= :qty
             ");
 
@@ -935,6 +946,7 @@ class Repository
 
                 $stmtStock->execute([
                     ':qty'        => $line['quantity'],
+                    ':updated_at' => $now,
                     ':product_id' => $line['product_id'],
                 ]);
 
@@ -1162,6 +1174,7 @@ class Repository
             }
 
             $stockRestoredNow = false;
+            $now = date('Y-m-d H:i:s');
 
             // Restore stock exactly once when cancelling from Pending or Confirmed
             if ($newStatus === 'Cancelled') {
@@ -1175,33 +1188,35 @@ class Repository
 
                 $stmtRestore = $this->pdo->prepare("
                     UPDATE products
-                    SET stock = stock + :qty, updated_at = CURRENT_TIMESTAMP
+                    SET stock = stock + :qty, updated_at = :updated_at
                     WHERE id = :product_id
                 ");
 
                 foreach ($order['items'] as $item) {
                     $stmtRestore->execute([
                         ':qty'        => $item['quantity'],
+                        ':updated_at' => $now,
                         ':product_id' => $item['product_id'],
                     ]);
                 }
 
                 $stmtUpdate = $this->pdo->prepare("
                     UPDATE orders
-                    SET status = 'Cancelled', stock_restored = 1, updated_at = CURRENT_TIMESTAMP
+                    SET status = 'Cancelled', stock_restored = 1, updated_at = :updated_at
                     WHERE id = :id AND stock_restored = 0
                 ");
-                $stmtUpdate->execute([':id' => $orderId]);
+                $stmtUpdate->execute([':updated_at' => $now, ':id' => $orderId]);
                 $stockRestoredNow = true;
             } else {
                 $stmtUpdate = $this->pdo->prepare("
                     UPDATE orders
-                    SET status = :status, updated_at = CURRENT_TIMESTAMP
+                    SET status = :status, updated_at = :updated_at
                     WHERE id = :id
                 ");
                 $stmtUpdate->execute([
-                    ':status' => $newStatus,
-                    ':id'     => $orderId,
+                    ':status'     => $newStatus,
+                    ':updated_at' => $now,
+                    ':id'         => $orderId,
                 ]);
             }
 

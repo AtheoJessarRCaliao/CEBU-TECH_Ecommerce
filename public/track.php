@@ -56,7 +56,7 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
             <div>
                 <h2 class="mono-num" style="font-size: 1.3rem; font-weight: 800;">Order <?= e($order['order_number']) ?></h2>
                 <div style="font-size: 0.85rem; color: var(--text-secondary);">
-                    Placed on <?= e($order['created_at']) ?> &bull; Updated <?= e($order['updated_at']) ?>
+                    Placed on <?= e(formatDateTime($order['created_at'])) ?> &bull; Updated <?= e(formatDateTime($order['updated_at'])) ?>
                 </div>
             </div>
             <span class="status-pill status-<?= e($order['status']) ?>" style="font-size: 0.9rem; padding: 6px 14px;">

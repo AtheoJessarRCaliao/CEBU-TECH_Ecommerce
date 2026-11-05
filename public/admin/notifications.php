@@ -73,7 +73,7 @@ require_once __DIR__ . '/../../app/Views/layouts/admin_header.php';
                     <div class="notif-content">
                         <div class="notif-header">
                             <span class="notif-title"><?= e($n['title']) ?></span>
-                            <span class="notif-time mono-num"><?= e($n['created_at']) ?></span>
+                            <span class="notif-time mono-num"><?= e(formatDateTime($n['created_at'])) ?></span>
                         </div>
                         <p class="notif-message"><?= e($n['message']) ?></p>
                         <?php if (!empty($n['link'])): ?>

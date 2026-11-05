@@ -127,6 +127,30 @@ function normalizeEmail(string $email): string
 }
 
 /**
+ * Format a database timestamp into an accurate, human-readable local time string
+ * Example: "2026-11-05 18:22:15" -> "Nov 5, 2026, 6:22 PM"
+ */
+function formatDateTime(?string $datetime, string $format = 'M j, Y, g:i A'): string
+{
+    if (empty($datetime)) {
+        return '—';
+    }
+    $ts = strtotime($datetime);
+    if ($ts === false) {
+        return (string)$datetime;
+    }
+    return date($format, $ts);
+}
+
+/**
+ * Return current real-time timestamp in the configured timezone
+ */
+function currentTimestamp(): string
+{
+    return date('Y-m-d H:i:s');
+}
+
+/**
  * Generate or retrieve CSRF token
  */
 function csrfToken(): string

@@ -50,7 +50,7 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
             <div style="margin-bottom: 4px;"><strong>Name:</strong> <?= e($order['customer_name']) ?></div>
             <div style="margin-bottom: 4px;"><strong>Email:</strong> <?= e($order['customer_email']) ?></div>
             <div style="margin-bottom: 4px;"><strong>Contact:</strong> <?= e($order['contact_number']) ?></div>
-            <div><strong>Placed At:</strong> <?= e($order['created_at']) ?></div>
+            <div><strong>Placed At:</strong> <?= e(formatDateTime($order['created_at'])) ?></div>
         </div>
 
         <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 16px;">

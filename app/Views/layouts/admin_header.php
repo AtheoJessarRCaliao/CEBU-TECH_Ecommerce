@@ -112,6 +112,10 @@ $notifUnread  = Repository::getInstance()->getUnreadNotificationCount();
                 </div>
 
                 <div class="admin-topbar-right">
+                    <div class="admin-live-clock" id="admin-live-clock" title="Philippine Standard Time (Asia/Manila)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span class="live-clock-text mono-num" id="live-clock-display"><?= date('M j, Y, g:i:s A') ?></span>
+                    </div>
                     <a href="notifications.php" class="admin-topbar-btn <?= $notifUnread > 0 ? 'has-badge' : '' ?>" title="View Activity Alerts" aria-label="Activity Alerts">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                         <?php if ($notifUnread > 0): ?>

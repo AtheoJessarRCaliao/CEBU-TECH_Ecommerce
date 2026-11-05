@@ -423,4 +423,25 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
+
+    // ------------------------------------------------------------------------
+    // 10. Live Real-Time Clock Display (#admin-live-clock)
+    // ------------------------------------------------------------------------
+    var liveClockDisplay = document.getElementById('live-clock-display');
+    if (liveClockDisplay) {
+        function updateLiveClock() {
+            var now = new Date();
+            var options = {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            liveClockDisplay.textContent = now.toLocaleString('en-US', options);
+        }
+        setInterval(updateLiveClock, 1000);
+    }
 });

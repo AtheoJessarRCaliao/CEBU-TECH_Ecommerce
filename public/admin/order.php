@@ -47,7 +47,7 @@ require_once __DIR__ . '/../../app/Views/layouts/admin_header.php';
     <div>
         <h1 class="section-title">Order Details: <?= e($order['order_number']) ?></h1>
         <p style="color: var(--text-secondary); font-size: 0.9rem;">
-            Placed on <?= e($order['created_at']) ?> &bull; Last updated <?= e($order['updated_at']) ?>
+            Placed on <?= e(formatDateTime($order['created_at'])) ?> &bull; Last updated <?= e(formatDateTime($order['updated_at'])) ?>
         </p>
     </div>
     <a href="orders.php" class="btn btn-secondary btn-sm">&larr; Back to Orders List</a>

@@ -134,7 +134,7 @@ require_once __DIR__ . '/../../app/Views/layouts/admin_header.php';
                                 <div style="font-size: 0.78rem; color: var(--text-secondary);"><?= e($ord['customer_email']) ?></div>
                             </td>
                             <td data-label="Date / Time" style="font-size: 0.84rem; color: var(--text-secondary);">
-                                <?= e($ord['created_at']) ?>
+                                <?= e(formatDateTime($ord['created_at'])) ?>
                             </td>
                             <td data-label="Total" style="font-weight: 700;">
                                 <?= e(formatPhp((int)$ord['total_cents'])) ?>
