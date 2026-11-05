@@ -5,7 +5,7 @@ require_once __DIR__ . '/../app/Core/Repository.php';
 
 $repo = Repository::getInstance();
 
-// Handle Customer Self-Service Lifecycle Actions (Cancel & Optional Status Progression)
+// Handle Customer Self-Service Cancellation (Permitted from Pending or Confirmed only)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action       = (string)($_POST['action'] ?? '');
     $postOrderNum = trim((string)($_POST['order_number'] ?? ''));
@@ -35,21 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 setFlash('danger', $res['error'] ?? 'Failed to cancel order.');
             }
-        }
-    } elseif ($action === 'advance_status') {
-        // Section 10 Rule: Strict sequence Pending -> Confirmed -> Preparing -> Shipped -> Completed
-        $pipeline = ['Pending', 'Confirmed', 'Preparing', 'Shipped', 'Completed'];
-        $currIdx  = array_search($targetOrder['status'], $pipeline, true);
-        if ($currIdx !== false && isset($pipeline[$currIdx + 1])) {
-            $nextStatus = $pipeline[$currIdx + 1];
-            $res = $repo->updateOrderStatus((int)$targetOrder['id'], $nextStatus);
-            if ($res['success']) {
-                setFlash('success', "Order {$targetOrder['order_number']} status progressed from \"{$targetOrder['status']}\" to \"{$nextStatus}\".");
-            } else {
-                setFlash('danger', $res['error'] ?? 'Failed to advance order status.');
-            }
-        } else {
-            setFlash('warning', "Order {$targetOrder['order_number']} is in final status \"{$targetOrder['status']}\" and cannot be progressed further.");
         }
     }
 
@@ -114,7 +99,6 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
     <?php
     $pipeline = ['Pending', 'Confirmed', 'Preparing', 'Shipped', 'Completed'];
     $currentIndex = array_search($order['status'], $pipeline, true);
-    $nextStatus = ($currentIndex !== false && isset($pipeline[$currentIndex + 1])) ? $pipeline[$currentIndex + 1] : null;
     $canCancel  = in_array($order['status'], ['Pending', 'Confirmed'], true);
     ?>
     <div class="card" style="margin-bottom: 36px; border-left: 4px solid var(--primary);">
@@ -152,47 +136,30 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
             <?php endif; ?>
         </div>
 
-        <!-- Customer Order Action Controls (Cancel & Optional Status Progression) -->
-        <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-            <div>
-                <strong style="font-size: 0.9rem;">Order Status &amp; Cancellation Controls</strong>
-                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;">
-                    <?php if ($canCancel): ?>
-                        Eligible for cancellation. Cancelling will release the items back to available inventory.
-                    <?php elseif ($order['status'] === 'Cancelled'): ?>
-                        This order was cancelled. Reserved inventory was restored to available stock.
-                    <?php elseif ($order['status'] === 'Completed'): ?>
-                        This order has been completed and delivered.
-                    <?php else: ?>
-                        Order is in fulfillment (<?= e($order['status']) ?>). Cancellation is not permitted.
-                    <?php endif; ?>
+        <!-- Customer Order Action Controls (Eligible Cancellation from Pending or Confirmed) -->
+        <?php if ($canCancel): ?>
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <strong style="font-size: 0.9rem;">Order Cancellation</strong>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;">
+                        This order is currently <strong><?= e($order['status']) ?></strong> and eligible for cancellation. Cancelling will release the items back to available inventory.
+                    </div>
                 </div>
-            </div>
 
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <?php if ($canCancel): ?>
-                    <form method="post" action="track.php" data-confirm="Are you sure you want to cancel Order <?= e($order['order_number']) ?>? Product stock will be immediately restored to inventory.">
-                        <input type="hidden" name="csrf_token" value="<?= csrfToken() ?>">
-                        <input type="hidden" name="order_number" value="<?= e($order['order_number']) ?>">
-                        <input type="hidden" name="action" value="cancel_order">
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            &#10006; Cancel Order
-                        </button>
-                    </form>
-                <?php endif; ?>
-
-                <?php if ($nextStatus): ?>
-                    <form method="post" action="track.php">
-                        <input type="hidden" name="csrf_token" value="<?= csrfToken() ?>">
-                        <input type="hidden" name="order_number" value="<?= e($order['order_number']) ?>">
-                        <input type="hidden" name="action" value="advance_status">
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            Simulate Next: <?= e($nextStatus) ?> &rarr;
-                        </button>
-                    </form>
-                <?php endif; ?>
+                <form method="post" action="track.php" data-confirm="Are you sure you want to cancel Order <?= e($order['order_number']) ?>? Product stock will be immediately restored to inventory.">
+                    <input type="hidden" name="csrf_token" value="<?= csrfToken() ?>">
+                    <input type="hidden" name="order_number" value="<?= e($order['order_number']) ?>">
+                    <input type="hidden" name="action" value="cancel_order">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        &#10006; Cancel Order
+                    </button>
+                </form>
             </div>
-        </div>
+        <?php elseif ($order['status'] === 'Cancelled'): ?>
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 20px; font-size: 0.85rem; color: #991b1b;">
+                <strong>Order Cancelled:</strong> This order has been cancelled and product stock quantities were restored to available inventory.
+            </div>
+        <?php endif; ?>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 20px; font-size: 0.9rem;">
             <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 16px;">
