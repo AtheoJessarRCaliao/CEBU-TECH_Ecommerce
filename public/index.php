@@ -41,7 +41,11 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
                 <span style="font-size: 0.74rem; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em;">
                     Flagship Spotlight
                 </span>
-                <span class="stock-badge in-stock">In Stock (<?= (int)$spotlightProduct['stock'] ?>)</span>
+                <?php if ((int)$spotlightProduct['stock'] <= 0): ?>
+                    <span class="stock-badge out-of-stock">Out of Stock</span>
+                <?php else: ?>
+                    <span class="stock-badge in-stock">In Stock (<?= (int)$spotlightProduct['stock'] ?>)</span>
+                <?php endif; ?>
             </div>
 
             <a href="product.php?id=<?= (int)$spotlightProduct['id'] ?>" class="hero-spotlight-thumb">

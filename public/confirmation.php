@@ -109,10 +109,18 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($order['items'] as $item): ?>
+                <?php foreach ($order['items'] as $item): 
+                    $liveP = $repo->getProductById((int)$item['product_id']);
+                    $remStock = $liveP ? (int)$liveP['stock'] : null;
+                ?>
                     <tr>
                         <td data-label="Item Name" style="font-weight: 700;">
-                            <?= e($item['product_name_snapshot']) ?>
+                            <div><?= e($item['product_name_snapshot']) ?></div>
+                            <?php if ($remStock !== null): ?>
+                                <div style="font-size: 0.78rem; color: #0284c7; font-weight: 600; margin-top: 3px;">
+                                    &bull; Real-time remaining stock: <?= $remStock ?> unit<?= $remStock === 1 ? '' : 's' ?>
+                                </div>
+                            <?php endif; ?>
                         </td>
                         <td data-label="Unit Price" class="mono-num">
                             <?= e(formatPhp((int)$item['unit_price_cents_snapshot'])) ?>

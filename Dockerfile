@@ -17,6 +17,6 @@ RUN mkdir -p storage public/assets/images \
 # Default port for Render
 EXPOSE 10000
 
-# Auto-seed database on start and run the PHP server on Render's dynamic $PORT
-CMD ["sh", "-c", "php scripts/seed_and_assets.php --reset-db && php -S 0.0.0.0:${PORT:-10000} -t public"]
+# Auto-initialize database on start (preserving live data across restarts) and run PHP server
+CMD ["sh", "-c", "php scripts/seed_and_assets.php && php -S 0.0.0.0:${PORT:-10000} -t public"]
 
