@@ -4,6 +4,59 @@ declare(strict_types=1);
 require_once __DIR__ . '/../app/Core/Repository.php';
 
 $repo = Repository::getInstance();
+
+// Handle Customer Self-Service Lifecycle Actions (Cancel & Optional Status Progression)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action       = (string)($_POST['action'] ?? '');
+    $postOrderNum = trim((string)($_POST['order_number'] ?? ''));
+    $csrf         = (string)($_POST['csrf_token'] ?? '');
+
+    if (!verifyCsrf($csrf)) {
+        setFlash('danger', 'Security validation failed (invalid CSRF token). Please try again.');
+        header('Location: track.php' . ($postOrderNum !== '' ? '?order=' . urlencode($postOrderNum) : ''));
+        exit;
+    }
+
+    $targetOrder = $postOrderNum !== '' ? $repo->getOrderByNumber($postOrderNum) : null;
+    if (!$targetOrder) {
+        setFlash('danger', 'The requested order could not be found.');
+        header('Location: track.php');
+        exit;
+    }
+
+    if ($action === 'cancel_order') {
+        // Section 10 Rule: Permit cancellation from Pending or Confirmed only. Completed and Cancelled are final.
+        if (!in_array($targetOrder['status'], ['Pending', 'Confirmed'], true)) {
+            setFlash('danger', "Cancellation is rejected: orders in \"{$targetOrder['status']}\" status cannot be cancelled. Cancellation is permitted from Pending or Confirmed only.");
+        } else {
+            $res = $repo->updateOrderStatus((int)$targetOrder['id'], 'Cancelled');
+            if ($res['success']) {
+                setFlash('success', "Order {$targetOrder['order_number']} has been cancelled. Product stock quantities have been restored to available inventory.");
+            } else {
+                setFlash('danger', $res['error'] ?? 'Failed to cancel order.');
+            }
+        }
+    } elseif ($action === 'advance_status') {
+        // Section 10 Rule: Strict sequence Pending -> Confirmed -> Preparing -> Shipped -> Completed
+        $pipeline = ['Pending', 'Confirmed', 'Preparing', 'Shipped', 'Completed'];
+        $currIdx  = array_search($targetOrder['status'], $pipeline, true);
+        if ($currIdx !== false && isset($pipeline[$currIdx + 1])) {
+            $nextStatus = $pipeline[$currIdx + 1];
+            $res = $repo->updateOrderStatus((int)$targetOrder['id'], $nextStatus);
+            if ($res['success']) {
+                setFlash('success', "Order {$targetOrder['order_number']} status progressed from \"{$targetOrder['status']}\" to \"{$nextStatus}\".");
+            } else {
+                setFlash('danger', $res['error'] ?? 'Failed to advance order status.');
+            }
+        } else {
+            setFlash('warning', "Order {$targetOrder['order_number']} is in final status \"{$targetOrder['status']}\" and cannot be progressed further.");
+        }
+    }
+
+    header('Location: track.php?order=' . urlencode($postOrderNum));
+    exit;
+}
+
 $queryNum = trim((string)($_GET['order'] ?? ''));
 $order    = $queryNum !== '' ? $repo->getOrderByNumber($queryNum) : null;
 $recentOrders = $repo->getOrders();
@@ -17,7 +70,7 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
     <div>
         <h1 class="section-title">Track Your Order</h1>
         <p class="section-subtitle">
-            Enter your Order Number (e.g., <code>ORD-20261101-1001</code>) to check its live fulfillment status, or choose a recent customer order below.
+            Enter your Order Number (e.g., <code>ORD-20261101-1001</code>) to check live status, or select a recent customer order below.
         </p>
     </div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -58,10 +111,16 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
         <p>No saved order matches <strong>"<?= e($queryNum) ?>"</strong>. Please check your order number or select from the recent orders below.</p>
     </div>
 <?php elseif ($order): ?>
+    <?php
+    $pipeline = ['Pending', 'Confirmed', 'Preparing', 'Shipped', 'Completed'];
+    $currentIndex = array_search($order['status'], $pipeline, true);
+    $nextStatus = ($currentIndex !== false && isset($pipeline[$currentIndex + 1])) ? $pipeline[$currentIndex + 1] : null;
+    $canCancel  = in_array($order['status'], ['Pending', 'Confirmed'], true);
+    ?>
     <div class="card" style="margin-bottom: 36px; border-left: 4px solid var(--primary);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
             <div>
-                <span class="stock-badge in-stock" style="margin-bottom: 6px; display: inline-block;">Active Order Tracking</span>
+                <span class="stock-badge in-stock" style="margin-bottom: 6px; display: inline-block;">Live Fulfillment Status</span>
                 <h2 class="mono-num" style="font-size: 1.35rem; font-weight: 800; margin: 4px 0;">Order <?= e($order['order_number']) ?></h2>
                 <div style="font-size: 0.85rem; color: var(--text-secondary);">
                     Placed on <?= e(formatDateTime($order['created_at'])) ?> &bull; Updated <?= e(formatDateTime($order['updated_at'])) ?>
@@ -74,10 +133,7 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
 
         <!-- Status Pipeline Indicator -->
         <div class="pipeline-stepper" style="margin: 20px 0;">
-            <?php
-            $pipeline = ['Pending', 'Confirmed', 'Preparing', 'Shipped', 'Completed'];
-            $currentIndex = array_search($order['status'], $pipeline, true);
-            foreach ($pipeline as $idx => $step):
+            <?php foreach ($pipeline as $idx => $step):
                 $stepClass = '';
                 if ($order['status'] === $step) {
                     $stepClass = 'is-active';
@@ -90,8 +146,52 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
                 </span>
             <?php endforeach; ?>
             <?php if ($order['status'] === 'Cancelled'): ?>
-                <span class="status-pill status-Cancelled">Cancelled (Stock Restored)</span>
+                <span class="status-pill status-Cancelled" style="font-size: 0.88rem; padding: 8px 16px;">
+                    &#9888; Cancelled (Stock Restored)
+                </span>
             <?php endif; ?>
+        </div>
+
+        <!-- Customer Order Action Controls (Cancel & Optional Status Progression) -->
+        <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <strong style="font-size: 0.9rem;">Order Status &amp; Cancellation Controls</strong>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;">
+                    <?php if ($canCancel): ?>
+                        Eligible for cancellation. Cancelling will release the items back to available inventory.
+                    <?php elseif ($order['status'] === 'Cancelled'): ?>
+                        This order was cancelled. Reserved inventory was restored to available stock.
+                    <?php elseif ($order['status'] === 'Completed'): ?>
+                        This order has been completed and delivered.
+                    <?php else: ?>
+                        Order is in fulfillment (<?= e($order['status']) ?>). Cancellation is not permitted.
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <?php if ($canCancel): ?>
+                    <form method="post" action="track.php" data-confirm="Are you sure you want to cancel Order <?= e($order['order_number']) ?>? Product stock will be immediately restored to inventory.">
+                        <input type="hidden" name="csrf_token" value="<?= csrfToken() ?>">
+                        <input type="hidden" name="order_number" value="<?= e($order['order_number']) ?>">
+                        <input type="hidden" name="action" value="cancel_order">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            &#10006; Cancel Order
+                        </button>
+                    </form>
+                <?php endif; ?>
+
+                <?php if ($nextStatus): ?>
+                    <form method="post" action="track.php">
+                        <input type="hidden" name="csrf_token" value="<?= csrfToken() ?>">
+                        <input type="hidden" name="order_number" value="<?= e($order['order_number']) ?>">
+                        <input type="hidden" name="action" value="advance_status">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            Simulate Next: <?= e($nextStatus) ?> &rarr;
+                        </button>
+                    </form>
+                <?php endif; ?>
+            </div>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 20px; font-size: 0.9rem;">
@@ -116,8 +216,8 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
             <table class="data-table mobile-stack-table">
                 <thead>
                     <tr>
-                        <th>Item</th>
-                        <th>Unit Price</th>
+                        <th>Item Name (Saved Snapshot)</th>
+                        <th>Unit Price (Purchased)</th>
                         <th>Quantity</th>
                         <th>Line Total</th>
                     </tr>
@@ -135,9 +235,13 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
             </table>
         </div>
 
+        <div style="background: var(--bg-subtle); border-radius: var(--radius-sm); border-left: 3px solid var(--primary); padding: 10px 14px; margin-top: 14px; font-size: 0.82rem; color: var(--text-secondary);">
+            <strong>Snapshot Guarantee:</strong> Item names and unit prices are permanently snapshotted in this order record. Later product catalog changes or price adjustments will not alter past order receipts.
+        </div>
+
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border-color);">
             <div style="font-size: 0.85rem; color: var(--text-secondary);">
-                Subtotal equals Total: No hidden fees or taxes added.
+                Subtotal equals Total: No shipping fee, tax, voucher, or service charge added.
             </div>
             <div class="mono-num" style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">
                 Total: <?= e(formatPhp((int)$order['total_cents'])) ?>

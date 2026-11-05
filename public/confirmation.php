@@ -13,6 +13,31 @@ if (!$order) {
     exit;
 }
 
+// Handle Order Cancellation directly from confirmation page if eligible (Pending or Confirmed)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cancel_order') {
+    $csrf = (string)($_POST['csrf_token'] ?? '');
+    if (!verifyCsrf($csrf)) {
+        setFlash('danger', 'Security validation failed (invalid CSRF token). Please try again.');
+        header('Location: confirmation.php?order=' . urlencode($order['order_number']));
+        exit;
+    }
+
+    if (in_array($order['status'], ['Pending', 'Confirmed'], true)) {
+        $res = $repo->updateOrderStatus((int)$order['id'], 'Cancelled');
+        if ($res['success']) {
+            setFlash('success', "Order {$order['order_number']} has been successfully cancelled. Reserved inventory was restored to stock.");
+        } else {
+            setFlash('danger', $res['error'] ?? 'Failed to cancel order.');
+        }
+    } else {
+        setFlash('danger', "Cancellation is not permitted for orders in \"{$order['status']}\" status.");
+    }
+
+    header('Location: confirmation.php?order=' . urlencode($order['order_number']));
+    exit;
+}
+
+$canCancel = in_array($order['status'], ['Pending', 'Confirmed'], true);
 $pageTitle = 'Order Confirmation — ' . $order['order_number'];
 $activeNav = '';
 require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
@@ -21,11 +46,19 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
 <div class="card" style="max-width: 880px; margin: 28px auto; padding: 32px;">
     <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);">
         <div>
-            <span class="stock-badge in-stock" style="margin-bottom: 10px;">Order Successfully Saved</span>
-            <h1 style="font-size: clamp(1.5rem, 2.5vw, 1.85rem); font-weight: 800;">Thank You for Your Order!</h1>
-            <p style="color: var(--text-secondary); font-size: 0.94rem; margin-top: 4px;">
-                Your order has been recorded and product stock quantities have been reserved.
-            </p>
+            <?php if ($order['status'] === 'Cancelled'): ?>
+                <span class="status-pill status-Cancelled" style="margin-bottom: 10px; display: inline-block;">Order Cancelled (Stock Restored)</span>
+                <h1 style="font-size: clamp(1.5rem, 2.5vw, 1.85rem); font-weight: 800;">Order Has Been Cancelled</h1>
+                <p style="color: var(--text-secondary); font-size: 0.94rem; margin-top: 4px;">
+                    This order has been cancelled and all item quantities have been restored to available stock.
+                </p>
+            <?php else: ?>
+                <span class="stock-badge in-stock" style="margin-bottom: 10px; display: inline-block;">Order Successfully Saved</span>
+                <h1 style="font-size: clamp(1.5rem, 2.5vw, 1.85rem); font-weight: 800;">Thank You for Your Order!</h1>
+                <p style="color: var(--text-secondary); font-size: 0.94rem; margin-top: 4px;">
+                    Your order has been recorded and product stock quantities have been reserved.
+                </p>
+            <?php endif; ?>
         </div>
 
         <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px 16px;">
@@ -96,6 +129,10 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
         </table>
     </div>
 
+    <div style="background: var(--bg-subtle); border-radius: var(--radius-sm); border-left: 3px solid var(--primary); padding: 10px 14px; margin-bottom: 20px; font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Snapshot Guarantee:</strong> Item names and unit prices are permanently snapshotted in this order record. Later product catalog changes or price adjustments will not alter past order receipts.
+    </div>
+
     <div style="max-width: 360px; margin-left: auto;">
         <div class="summary-row">
             <span>Subtotal</span>
@@ -108,8 +145,23 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-color);">
-        <a href="products.php" class="btn btn-primary">&larr; Continue Shopping</a>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <a href="products.php" class="btn btn-primary">&larr; Continue Shopping</a>
+            <?php if ($canCancel): ?>
+                <form method="post" action="confirmation.php?order=<?= urlencode($order['order_number']) ?>" data-confirm="Are you sure you want to cancel this order? This will release reserved stock back to available inventory.">
+                    <input type="hidden" name="csrf_token" value="<?= csrfToken() ?>">
+                    <input type="hidden" name="action" value="cancel_order">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        &#10006; Cancel Order
+                    </button>
+                </form>
+            <?php endif; ?>
+        </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="track.php?order=<?= urlencode($order['order_number']) ?>" class="btn btn-secondary">Track Order Status</a>
+            <a href="admin/order.php?id=<?= (int)$order['id'] ?>" class="btn btn-secondary">Manage Order in Admin &rarr;</a>
+        </div>
+    </div>
             <a href="track.php?order=<?= urlencode($order['order_number']) ?>" class="btn btn-secondary">Track Order Status</a>
             <a href="admin/order.php?id=<?= (int)$order['id'] ?>" class="btn btn-secondary">Manage Order in Admin &rarr;</a>
         </div>
