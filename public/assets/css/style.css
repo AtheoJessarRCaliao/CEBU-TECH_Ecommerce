@@ -4277,3 +4277,70 @@ body.admin-body {
         display: none !important;
     }
 }
+
+
+/* ============================================================================
+ * Enhanced Footer Layout & Mobile Spacing Fixes
+ * ============================================================================ */
+.footer-grid {
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr !important;
+    gap: 28px;
+}
+
+.footer-bottom {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    text-align: left !important;
+    border-top: 1px solid #1e293b;
+    padding-top: 20px;
+    color: #94a3b8;
+    font-size: 0.82rem;
+}
+
+.admin-footer-inner {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    text-align: left !important;
+}
+
+@media (max-width: 900px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+
+    body.has-bottom-nav {
+        padding-bottom: 0 !important;
+    }
+
+    .site-footer {
+        padding-bottom: 86px !important;
+    }
+
+    .footer-bottom {
+        flex-direction: column !important;
+        text-align: center !important;
+        justify-content: center !important;
+        gap: 6px;
+    }
+
+    .admin-footer-inner {
+        flex-direction: column !important;
+        text-align: center !important;
+        justify-content: center !important;
+        gap: 6px;
+    }
+}

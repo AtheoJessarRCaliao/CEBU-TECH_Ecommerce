@@ -6,8 +6,8 @@ $currentAdminNav = $adminNav ?? 'overview';
 
             <footer class="admin-footer">
                 <div class="admin-footer-inner">
-                    <span>&copy; <?= date('Y') ?> <?= e(STORE_NAME) ?> Admin Management Console</span>
-                    
+                    <span>&copy; <?= date('Y') ?> <?= e(STORE_NAME) ?> &bull; Admin Management Portal</span>
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">CubeTech Innovations Internship Assessment</span>
                 </div>
             </footer>
         </div><!-- /.admin-main-wrap -->

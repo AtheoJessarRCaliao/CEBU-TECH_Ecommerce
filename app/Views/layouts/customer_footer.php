@@ -57,23 +57,41 @@ $currentNav       = $activeNav ?? '';
     <footer class="site-footer" id="contact">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-col">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <img src="assets/images/Cube-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="brand-logo-img" style="width: 32px; height: 32px;">
-                        <h4 style="margin-bottom: 0; font-size: 1.05rem;"><?= e(STORE_NAME) ?></h4>
+                <div class="footer-col footer-col-brand">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                        <img src="assets/images/Cube-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="brand-logo-img" style="width: 34px; height: 34px;">
+                        <div>
+                            <h4 style="margin: 0; font-size: 1.15rem; color: #f8fafc; font-weight: 800;"><?= e(STORE_NAME) ?></h4>
+                            <span style="font-size: 0.72rem; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">CubeTech Innovations</span>
+                        </div>
                     </div>
-                    <p style="margin: 0; line-height: 1.5; font-size: 0.85rem; color: #94a3b8; max-width: 340px;">
-                        <?= e(STORE_TAGLINE) ?> &bull; Cebu City, Philippines.
+                    <p style="margin: 0 0 14px; line-height: 1.55; font-size: 0.85rem; color: #94a3b8; max-width: 320px;">
+                        <?= e(STORE_TAGLINE) ?>. Precision-engineered mechanical keyboards, ergonomic mice, studio audio, and creator accessories.
                     </p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <span class="social-pill-link">&#10003; 100% PHP PDO</span>
+                        <span class="social-pill-link">&#10003; Real-Time Tracking</span>
+                    </div>
                 </div>
 
                 <div class="footer-col">
-                    <h4>Explore</h4>
+                    <h4>Categories</h4>
                     <ul class="footer-links">
-                        <li><a href="index.php">Home</a></li>
+                        <?php foreach ($footerCategories as $fCat): ?>
+                            <li><a href="products.php?category_id=<?= (int)$fCat['id'] ?>"><?= e($fCat['name']) ?></a></li>
+                        <?php endforeach; ?>
+                        <li><a href="products.php" style="color: #38bdf8;">All Products &rarr;</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.php">Home Storefront</a></li>
                         <li><a href="products.php">Shop Products</a></li>
                         <li><a href="cart.php">Shopping Cart</a></li>
-                        <li><a href="track.php">Track Order</a></li>
+                        <li><a href="track.php">Track Order Status</a></li>
+                        <li><a href="admin/index.php">Admin Console</a></li>
                     </ul>
                 </div>
 
@@ -81,15 +99,23 @@ $currentNav       = $activeNav ?? '';
                     <h4>Customer Care</h4>
                     <ul class="footer-links">
                         <li><strong>Email:</strong> support@cubetechhub.demo</li>
-                        <li><strong>Location:</strong> Cebu IT Park, Cebu City</li>
-                        <li><a href="admin/index.php" style="color: #38bdf8;">Admin Console &rarr;</a></li>
+                        <li><strong>Location:</strong> Cebu IT Park, Cebu City, PH</li>
+                        <li><strong>Hours:</strong> Mon &ndash; Sat, 8:00 AM &ndash; 7:00 PM</li>
+                        <li style="margin-top: 4px; font-size: 0.8rem; color: #64748b;">
+                            Payments: COD, E-Wallet, Bank Transfer
+                        </li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <span>&copy; <?= date('Y') ?> <?= e(STORE_NAME) ?>. All rights reserved.</span>
-                
+                <div class="footer-bottom-left">
+                    &copy; <?= date('Y') ?> <?= e(STORE_NAME) ?> &bull; CubeTech Innovations. All rights reserved.
+                </div>
+                <div class="footer-bottom-right">
+                    <span>Precision Developer Gear</span> &bull; 
+                    <a href="track.php" style="color: #38bdf8; text-decoration: none;">Live Order Tracking &nearr;</a>
+                </div>
             </div>
         </div>
     </footer>

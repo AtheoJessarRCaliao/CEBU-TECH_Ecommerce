@@ -6,6 +6,7 @@ require_once __DIR__ . '/../app/Core/Repository.php';
 $repo = Repository::getInstance();
 $queryNum = trim((string)($_GET['order'] ?? ''));
 $order    = $queryNum !== '' ? $repo->getOrderByNumber($queryNum) : null;
+$recentOrders = $repo->getOrders();
 
 $pageTitle = 'Track Order Status';
 $activeNav = 'track';
@@ -16,13 +17,16 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
     <div>
         <h1 class="section-title">Track Your Order</h1>
         <p class="section-subtitle">
-            Enter your Order Number (e.g., <code>ORD-20261101-1001</code>) to check its live fulfillment status.
+            Enter your Order Number (e.g., <code>ORD-20261101-1001</code>) to check its live fulfillment status, or choose a recent customer order below.
         </p>
     </div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <a href="track.php?order=ORD-20261101-1001" class="btn btn-secondary btn-sm">Sample #1001</a>
-        <a href="track.php?order=ORD-20261103-1002" class="btn btn-secondary btn-sm">Sample #1002</a>
-        <a href="track.php?order=ORD-20261104-1003" class="btn btn-secondary btn-sm">Sample #1003</a>
+        <?php foreach (array_slice($recentOrders, 0, 4) as $pillOrd): ?>
+            <a href="track.php?order=<?= urlencode($pillOrd['order_number']) ?>" 
+               class="btn <?= ($order && $order['order_number'] === $pillOrd['order_number']) ? 'btn-primary' : 'btn-secondary' ?> btn-sm">
+                <?= e($pillOrd['order_number']) ?> (<?= e($pillOrd['status']) ?>)
+            </a>
+        <?php endforeach; ?>
     </div>
 </div>
 
@@ -41,31 +45,35 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
             >
         </div>
         <button type="submit" class="btn btn-primary" style="min-height: 42px;">Look Up Order</button>
+        <?php if ($queryNum !== ''): ?>
+            <a href="track.php" class="btn btn-secondary" style="min-height: 42px;">Clear Filter</a>
+        <?php endif; ?>
     </form>
 </section>
 
 <?php if ($queryNum !== '' && !$order): ?>
-    <div class="empty-state">
+    <div class="empty-state" style="margin-bottom: 32px;">
         <div class="empty-state-icon">&#128269;</div>
         <h3>Order Not Found</h3>
-        <p>No saved order matches <strong>"<?= e($queryNum) ?>"</strong>. Please double-check your order number.</p>
+        <p>No saved order matches <strong>"<?= e($queryNum) ?>"</strong>. Please check your order number or select from the recent orders below.</p>
     </div>
 <?php elseif ($order): ?>
-    <div class="card" style="margin-bottom: 36px;">
+    <div class="card" style="margin-bottom: 36px; border-left: 4px solid var(--primary);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
             <div>
-                <h2 class="mono-num" style="font-size: 1.3rem; font-weight: 800;">Order <?= e($order['order_number']) ?></h2>
+                <span class="stock-badge in-stock" style="margin-bottom: 6px; display: inline-block;">Active Order Tracking</span>
+                <h2 class="mono-num" style="font-size: 1.35rem; font-weight: 800; margin: 4px 0;">Order <?= e($order['order_number']) ?></h2>
                 <div style="font-size: 0.85rem; color: var(--text-secondary);">
                     Placed on <?= e(formatDateTime($order['created_at'])) ?> &bull; Updated <?= e(formatDateTime($order['updated_at'])) ?>
                 </div>
             </div>
-            <span class="status-pill status-<?= e($order['status']) ?>" style="font-size: 0.9rem; padding: 6px 14px;">
+            <span class="status-pill status-<?= e($order['status']) ?>" style="font-size: 0.95rem; padding: 7px 16px;">
                 Current Status: <?= e($order['status']) ?>
             </span>
         </div>
 
         <!-- Status Pipeline Indicator -->
-        <div class="pipeline-stepper">
+        <div class="pipeline-stepper" style="margin: 20px 0;">
             <?php
             $pipeline = ['Pending', 'Confirmed', 'Preparing', 'Shipped', 'Completed'];
             $currentIndex = array_search($order['status'], $pipeline, true);
@@ -86,23 +94,29 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
             <?php endif; ?>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 20px; font-size: 0.9rem;">
-            <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
-                <strong>Customer:</strong> <?= e($order['customer_name']) ?><br>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 20px; font-size: 0.9rem;">
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 16px;">
+                <h3 style="font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); margin-bottom: 8px;">Customer Information</h3>
+                <strong>Name:</strong> <?= e($order['customer_name']) ?><br>
                 <strong>Email:</strong> <?= e($order['customer_email']) ?><br>
                 <strong>Contact:</strong> <?= e($order['contact_number']) ?>
             </div>
-            <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 16px;">
+                <h3 style="font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); margin-bottom: 8px;">Delivery &amp; Payment</h3>
                 <strong>Payment Method:</strong> <?= e($order['payment_method']) ?><br>
-                <strong>Delivery Address:</strong> <?= e($order['delivery_address']) ?>
+                <strong>Delivery Address:</strong><br><?= nl2br(e($order['delivery_address'])) ?>
+                <?php if (trim((string)$order['order_notes']) !== ''): ?>
+                    <br><strong>Notes:</strong> <?= e($order['order_notes']) ?>
+                <?php endif; ?>
             </div>
         </div>
 
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 12px;">Ordered Items (Snapshot)</h3>
         <div class="table-responsive">
             <table class="data-table mobile-stack-table">
                 <thead>
                     <tr>
-                        <th>Item (Saved Snapshot)</th>
+                        <th>Item</th>
                         <th>Unit Price</th>
                         <th>Quantity</th>
                         <th>Line Total</th>
@@ -121,10 +135,94 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
             </table>
         </div>
 
-        <div style="display: flex; justify-content: flex-end; margin-top: 16px; font-size: 1.2rem; font-weight: 800;" class="mono-num">
-            Total: <?= e(formatPhp((int)$order['total_cents'])) ?>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border-color);">
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                Subtotal equals Total: No hidden fees or taxes added.
+            </div>
+            <div class="mono-num" style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">
+                Total: <?= e(formatPhp((int)$order['total_cents'])) ?>
+            </div>
         </div>
     </div>
 <?php endif; ?>
+
+<!-- Recent Customer Orders Section -->
+<section style="margin-top: 28px; margin-bottom: 40px;">
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color);">
+            <div>
+                <h2 style="font-size: 1.2rem; font-weight: 800; margin: 0 0 4px;">Recent Customer Orders</h2>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0;">
+                    Click <strong>Track Order</strong> on any customer order below to view its complete fulfillment timeline and itemized receipt.
+                </p>
+            </div>
+            <span class="stock-badge in-stock" style="font-size: 0.8rem;">
+                <?= count($recentOrders) ?> <?= count($recentOrders) === 1 ? 'Order Recorded' : 'Orders Recorded' ?>
+            </span>
+        </div>
+
+        <?php if (empty($recentOrders)): ?>
+            <div class="empty-state" style="padding: 30px;">
+                <p style="color: var(--text-secondary); margin: 0;">No customer orders found in the database yet.</p>
+            </div>
+        <?php else: ?>
+            <div class="table-responsive">
+                <table class="data-table mobile-stack-table">
+                    <thead>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Customer</th>
+                            <th>Placed At</th>
+                            <th>Items / Units</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($recentOrders as $rOrd): 
+                            $isSelected = $order && $order['order_number'] === $rOrd['order_number'];
+                        ?>
+                            <tr style="<?= $isSelected ? 'background: #f0f9ff; outline: 2px solid var(--primary);' : '' ?>">
+                                <td data-label="Order Number" class="mono-num" style="font-weight: 800;">
+                                    <a href="track.php?order=<?= urlencode($rOrd['order_number']) ?>" style="color: var(--primary); text-decoration: none;">
+                                        <?= e($rOrd['order_number']) ?>
+                                    </a>
+                                    <?php if ($isSelected): ?>
+                                        <div style="font-size: 0.72rem; color: #0284c7; font-weight: 700; margin-top: 2px;">&bull; Currently Viewing</div>
+                                    <?php endif; ?>
+                                </td>
+                                <td data-label="Customer">
+                                    <div style="font-weight: 600;"><?= e($rOrd['customer_name']) ?></div>
+                                    <div style="font-size: 0.76rem; color: var(--text-secondary);"><?= e($rOrd['delivery_address']) ?></div>
+                                </td>
+                                <td data-label="Placed At" style="font-size: 0.84rem; color: var(--text-secondary);">
+                                    <?= e(formatDateTime($rOrd['created_at'])) ?>
+                                </td>
+                                <td data-label="Items / Units" style="font-size: 0.86rem;">
+                                    <strong><?= (int)$rOrd['total_units'] ?></strong> <?= (int)$rOrd['total_units'] === 1 ? 'unit' : 'units' ?>
+                                    <span style="color: var(--text-muted); font-size: 0.76rem;">(<?= (int)$rOrd['line_count'] ?> <?= (int)$rOrd['line_count'] === 1 ? 'item' : 'items' ?>)</span>
+                                </td>
+                                <td data-label="Total" class="mono-num" style="font-weight: 800; color: var(--text-primary);">
+                                    <?= e(formatPhp((int)$rOrd['total_cents'])) ?>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="status-pill status-<?= e($rOrd['status']) ?>">
+                                        <?= e($rOrd['status']) ?>
+                                    </span>
+                                </td>
+                                <td data-label="Action">
+                                    <a href="track.php?order=<?= urlencode($rOrd['order_number']) ?>" class="btn <?= $isSelected ? 'btn-secondary' : 'btn-primary' ?> btn-sm">
+                                        <?= $isSelected ? 'Viewing &check;' : 'Track Order &rarr;' ?>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
 
 <?php require_once __DIR__ . '/../app/Views/layouts/customer_footer.php'; ?>
