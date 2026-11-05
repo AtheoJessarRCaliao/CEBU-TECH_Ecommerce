@@ -14,7 +14,7 @@ IF %ERRORLEVEL% EQU 0 (
 )
 
 echo ============================================================================
-echo Starting CebuTech Hub E-Commerce Server on http://localhost:8000
+echo Starting CubeTech Hub E-Commerce Server on http://localhost:8000
 echo   Document Root       : public/
 echo   Customer Storefront : http://localhost:8000/index.php
 echo   Admin Dashboard     : http://localhost:8000/admin/index.php
