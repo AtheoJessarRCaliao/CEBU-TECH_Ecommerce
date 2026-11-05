@@ -4,22 +4,23 @@ declare(strict_types=1);
 require_once __DIR__ . '/../Config/config.php';
 
 /**
- * CebuTech Hub - Admin Demo Authentication & Session Guard
+ * CubeTech Hub - Admin Demo Authentication & Session Guard
  * Section 11: Prevents direct access to admin routes without a demo session.
  */
 class Auth
 {
-    private const ADMIN_SESSION_KEY = 'cebutech_admin_logged_in';
-    private const ADMIN_USER_KEY    = 'cebutech_admin_user';
+    private const ADMIN_SESSION_KEY = 'cubetech_admin_logged_in';
+    private const ADMIN_USER_KEY    = 'cubetech_admin_user';
 
     public static function isLoggedIn(): bool
     {
-        return !empty($_SESSION[self::ADMIN_SESSION_KEY]) && $_SESSION[self::ADMIN_SESSION_KEY] === true;
+        return (!empty($_SESSION[self::ADMIN_SESSION_KEY]) && $_SESSION[self::ADMIN_SESSION_KEY] === true)
+            || (!empty($_SESSION['cebutech_admin_logged_in']) && $_SESSION['cebutech_admin_logged_in'] === true);
     }
 
     public static function getAdminUser(): string
     {
-        return (string)($_SESSION[self::ADMIN_USER_KEY] ?? DEMO_ADMIN_USERNAME);
+        return (string)($_SESSION[self::ADMIN_USER_KEY] ?? $_SESSION['cebutech_admin_user'] ?? DEMO_ADMIN_USERNAME);
     }
 
     public static function attemptLogin(string $username, string $password): bool

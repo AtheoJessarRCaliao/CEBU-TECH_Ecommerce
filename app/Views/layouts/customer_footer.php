@@ -59,7 +59,7 @@ $currentNav       = $activeNav ?? '';
             <div class="footer-grid">
                 <div class="footer-col">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <img src="assets/images/Cebu-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="brand-logo-img" style="width: 32px; height: 32px;">
+                        <img src="assets/images/Cube-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="brand-logo-img" style="width: 32px; height: 32px;">
                         <h4 style="margin-bottom: 0; font-size: 1.05rem;"><?= e(STORE_NAME) ?></h4>
                     </div>
                     <p style="margin: 0; line-height: 1.5; font-size: 0.85rem; color: #94a3b8; max-width: 340px;">
@@ -80,7 +80,7 @@ $currentNav       = $activeNav ?? '';
                 <div class="footer-col">
                     <h4>Customer Care</h4>
                     <ul class="footer-links">
-                        <li><strong>Email:</strong> support@cebutechhub.demo</li>
+                        <li><strong>Email:</strong> support@cubetechhub.demo</li>
                         <li><strong>Location:</strong> Cebu IT Park, Cebu City</li>
                         <li><a href="admin/index.php" style="color: #38bdf8;">Admin Console &rarr;</a></li>
                     </ul>

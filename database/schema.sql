@@ -1,5 +1,5 @@
 -- ============================================================================
--- CebuTech Hub (CubeTech Innovations Assessment) - Relational Database Schema
+-- CubeTech Hub (CubeTech Innovations Assessment) - Relational Database Schema
 -- Compatible with SQLite 3 and MySQL 8+ / MariaDB 10+
 -- ============================================================================
 

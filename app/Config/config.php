@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * CebuTech Hub - Global Configuration & Helper Utilities
+ * CubeTech Hub - Global Configuration & Helper Utilities
  * Web Development Internship Assessment | CubeTech Innovations
  */
 
@@ -19,7 +19,7 @@ if (session_status() === PHP_SESSION_NONE) {
 date_default_timezone_set('Asia/Manila');
 
 // Store Identity Constants
-define('STORE_NAME', 'CebuTech Hub');
+define('STORE_NAME', 'CubeTech Hub');
 define('STORE_TAGLINE', 'Precision Gear for Developers & Creators');
 define('STORE_COMPANY', 'CubeTech Innovations (Fictional Demo Store)');
 define('STORE_CURRENCY', 'PHP');
@@ -33,8 +33,8 @@ define('BASE_PATH', dirname(__DIR__, 2));
 define('APP_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'app');
 define('PUBLIC_PATH', BASE_PATH . DIRECTORY_SEPARATOR . 'public');
 define('DATA_DIR', BASE_PATH . DIRECTORY_SEPARATOR . 'storage');
-define('SQLITE_DB_PATH', DATA_DIR . DIRECTORY_SEPARATOR . 'cebutech.sqlite');
-define('JSON_DB_PATH', DATA_DIR . DIRECTORY_SEPARATOR . 'cebutech_data.json');
+define('SQLITE_DB_PATH', DATA_DIR . DIRECTORY_SEPARATOR . (file_exists(DATA_DIR . DIRECTORY_SEPARATOR . 'cubetech.sqlite') ? 'cubetech.sqlite' : (file_exists(DATA_DIR . DIRECTORY_SEPARATOR . 'cebutech.sqlite') ? 'cebutech.sqlite' : 'cubetech.sqlite')));
+define('JSON_DB_PATH', DATA_DIR . DIRECTORY_SEPARATOR . (file_exists(DATA_DIR . DIRECTORY_SEPARATOR . 'cubetech_data.json') ? 'cubetech_data.json' : 'cebutech_data.json'));
 
 // Allowed Payment Methods (Selection only per assessment specification)
 define('PAYMENT_METHODS', [

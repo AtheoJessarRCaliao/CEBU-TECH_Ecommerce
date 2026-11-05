@@ -1,14 +1,14 @@
-# CebuTech Hub — E-Commerce Website & Admin Dashboard
+# CubeTech Hub — E-Commerce Website & Admin Dashboard
 
 **Web Development Internship Assessment | CubeTech Innovations**
 
-CebuTech Hub is a responsive, full-stack PHP e-commerce web application built for a premier developer and creator hardware retailer. The system features two interconnected interfaces—a **Customer Storefront** and a protected **Admin Dashboard**—operating over a shared relational SQLite 3 (PDO) data store with an automatic server-side JSON fallback.
+CubeTech Hub is a responsive, full-stack PHP e-commerce web application built for a premier developer and creator hardware retailer. The system features two interconnected interfaces—a **Customer Storefront** and a protected **Admin Dashboard**—operating over a shared relational SQLite 3 (PDO) data store with an automatic server-side JSON fallback.
 
 ---
 
 ## 1. Overview
 
-CebuTech Hub provides an end-to-end e-commerce experience tailored to both desktop and mobile devices (`375px` to `1280px+`). All money values use exact integer centavo arithmetic (`price_cents`) to completely prevent floating-point rounding errors.
+CubeTech Hub provides an end-to-end e-commerce experience tailored to both desktop and mobile devices (`375px` to `1280px+`). All money values use exact integer centavo arithmetic (`price_cents`) to completely prevent floating-point rounding errors.
 
 ### Customer Storefront
 - **Home Page (`index.php`)**: Features brand identity, navigation bar, hero banner, category cards with real-time active product counters, featured products grid, and a streamlined 3-column footer.
@@ -115,9 +115,9 @@ Cebu-Tech-Ecommmerce/
 │       ├── css/
 │       │   └── style.css                 # Master stylesheet (375px mobile to 1280px+ desktop)
 │       ├── js/
-│       │   └── app.js                    # Vanilla JS: drawer navigation, CebuToast, modal dialogs
+│       │   └── app.js                    # Vanilla JS: drawer navigation, CubeToast, modal dialogs
 │       └── images/                       # Local authentic JPG photography & SVG vector fallbacks
-│           ├── Cebu-Logo.png             # Official CebuTech brand emblem
+│           ├── Cube-Logo.png             # Official CubeTech brand emblem
 │           └── prod-*.jpg                # 12 authentic hardware product photographs
 │
 ├── scripts/                              # AUTOMATION & MAINTENANCE UTILITIES
@@ -125,7 +125,7 @@ Cebu-Tech-Ecommmerce/
 │
 ├── storage/                              # PERSISTENT LOCAL DATA STORES (Git-ignored)
 │   ├── .gitkeep                          # Git retention placeholder
-│   └── cebutech.sqlite                   # Active SQLite 3 database file
+│   └── cubetech.sqlite                   # Active SQLite 3 database file
 │
 ├── tests/                                # AUTOMATED ACCEPTANCE TEST SUITE
 │   └── acceptance_checks.php             # Section 17 verification runner (Checks 01 through 10)
@@ -148,9 +148,9 @@ Cebu-Tech-Ecommmerce/
   - CSRF token verification on all POST submissions
   - Integer centavo arithmetic helper functions (`price_cents`, `format_php_cents()`)
 - **Database / Data Layer**:
-  - **SQLite 3 via PDO** (`storage/cebutech.sqlite`) with foreign key constraints (`PRAGMA foreign_keys = ON`)
+  - **SQLite 3 via PDO** (`storage/cubetech.sqlite`) with foreign key constraints (`PRAGMA foreign_keys = ON`)
   - Relational schema defined in `database/schema.sql` and seeded from `database/seed.sql`
-  - Zero-configuration automatic server-side JSON fallback (`storage/cebutech_data.json`) with file-level locking (`LOCK_EX`) if `pdo_sqlite` is unavailable
+  - Zero-configuration automatic server-side JSON fallback (`storage/cubetech_data.json`) with file-level locking (`LOCK_EX`) if `pdo_sqlite` is unavailable
 - **Frontend & Styling**:
   - Semantic **HTML5** with native `<dialog>` modals and SVG micro-icons
   - Custom responsive **CSS3** (`public/assets/css/style.css`) using CSS Grid, Flexbox, custom design tokens, and media queries tested at `375px` and `1280px+`
@@ -164,8 +164,8 @@ Cebu-Tech-Ecommmerce/
 ## 4. Chosen Storage Approach and Limitations
 
 ### Chosen Approach
-- **Primary Engine**: **SQLite 3 via PDO** stored at `storage/cebutech.sqlite`.
-- **Portability Fallback**: File-locked, atomic server-side JSON store at `storage/cebutech_data.json` automatically activated if the PHP environment does not have `pdo_sqlite` loaded.
+- **Primary Engine**: **SQLite 3 via PDO** stored at `storage/cubetech.sqlite`.
+- **Portability Fallback**: File-locked, atomic server-side JSON store at `storage/cubetech_data.json` automatically activated if the PHP environment does not have `pdo_sqlite` loaded.
 
 ### Why This Approach Was Chosen
 1. **Server-Side ACID Transactions**: SQLite provides atomic transactions (`BEGIN`, `COMMIT`, `ROLLBACK`) required for checkout concurrency checks and order status transitions with inventory increments/decrements.
@@ -236,7 +236,7 @@ Render uses **Docker** to run PHP applications:
 
 ## 6. Environment Placeholders
 
-No external `.env` file or complex setup is required to run CebuTech Hub. All defaults are configured in `app/Config/config.php`.
+No external `.env` file or complex setup is required to run CubeTech Hub. All defaults are configured in `app/Config/config.php`.
 
 If you wish to customize admin demo credentials via environment variables, set the following placeholders before launching the server:
 

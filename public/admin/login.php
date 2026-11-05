@@ -38,9 +38,9 @@ $flashes = getFlashes();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Admin Portal Sign In | <?= e(STORE_NAME) ?></title>
-    <link rel="icon" type="image/png" href="../assets/images/Cebu-Logo.png">
-    <link rel="shortcut icon" type="image/png" href="../assets/images/Cebu-Logo.png">
-    <link rel="apple-touch-icon" href="../assets/images/Cebu-Logo.png">
+    <link rel="icon" type="image/png" href="../assets/images/Cube-Logo.png">
+    <link rel="shortcut icon" type="image/png" href="../assets/images/Cube-Logo.png">
+    <link rel="apple-touch-icon" href="../assets/images/Cube-Logo.png">
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body class="login-page-body" data-has-submitted="<?= $hasSubmitted ? 'true' : 'false' ?>">
@@ -48,7 +48,7 @@ $flashes = getFlashes();
     <!-- ===================================================================== -->
     <!-- 1. Splash Activity Screen (Branded Mobile App & Web Startup Animation) -->
     <!-- ===================================================================== -->
-    <div id="splash-activity" class="splash-activity" role="dialog" aria-modal="true" aria-label="Starting CebuTech Hub">
+    <div id="splash-activity" class="splash-activity" role="dialog" aria-modal="true" aria-label="Starting CubeTech Hub">
         <button type="button" id="splash-skip-btn" class="splash-skip-btn" aria-label="Skip splash screen">
             Skip &#8250;
         </button>
@@ -56,7 +56,7 @@ $flashes = getFlashes();
         <div class="splash-center">
             <div class="splash-logo-wrap">
                 <div class="splash-pulse-ring"></div>
-                <img src="../assets/images/Cebu-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="splash-logo-img">
+                <img src="../assets/images/Cube-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="splash-logo-img">
             </div>
 
             <h1 class="splash-brand-title"><?= e(STORE_NAME) ?></h1>
@@ -73,7 +73,7 @@ $flashes = getFlashes();
         </div>
 
         <div class="splash-app-tagline">
-            Powered by CebuTech Innovations &bull; Enterprise Core
+            Powered by CubeTech Innovations &bull; Enterprise Core
         </div>
     </div>
 
@@ -104,7 +104,7 @@ $flashes = getFlashes();
         <div class="login-auth-card <?= $error !== '' ? 'has-error' : '' ?>">
             <div class="login-brand-header">
                 <div class="login-brand-logo-wrap">
-                    <img src="../assets/images/Cebu-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="login-brand-logo-img">
+                    <img src="../assets/images/Cube-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="login-brand-logo-img">
                 </div>
                 <h2 class="login-title">Admin Management</h2>
                 <p class="login-subtitle">

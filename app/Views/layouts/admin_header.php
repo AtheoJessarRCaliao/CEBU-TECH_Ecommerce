@@ -17,9 +17,9 @@ $notifUnread  = Repository::getInstance()->getUnreadNotificationCount();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($pageTitle) ?></title>
-    <link rel="icon" type="image/png" href="../assets/images/Cebu-Logo.png">
-    <link rel="shortcut icon" type="image/png" href="../assets/images/Cebu-Logo.png">
-    <link rel="apple-touch-icon" href="../assets/images/Cebu-Logo.png">
+    <link rel="icon" type="image/png" href="../assets/images/Cube-Logo.png">
+    <link rel="shortcut icon" type="image/png" href="../assets/images/Cube-Logo.png">
+    <link rel="apple-touch-icon" href="../assets/images/Cube-Logo.png">
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body class="admin-body">
@@ -28,7 +28,7 @@ $notifUnread  = Repository::getInstance()->getUnreadNotificationCount();
         <aside id="admin-sidebar" class="admin-sidebar" aria-label="Admin Navigation Sidebar">
             <div class="admin-sidebar-header">
                 <a href="index.php" class="admin-brand">
-                    <img src="../assets/images/Cebu-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="admin-brand-logo">
+                    <img src="../assets/images/Cube-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="admin-brand-logo">
                     <div class="admin-brand-text">
                         <span class="admin-brand-title"><?= e(STORE_NAME) ?></span>
                         <span class="admin-brand-badge">Admin Panel</span>
@@ -104,7 +104,7 @@ $notifUnread  = Repository::getInstance()->getUnreadNotificationCount();
                         </span>
                     </button>
                     <div class="admin-topbar-title">
-                        <img src="../assets/images/Cebu-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="admin-topbar-mobile-logo">
+                        <img src="../assets/images/Cube-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="admin-topbar-mobile-logo">
                         <span class="admin-topbar-prefix">Admin Console</span>
                         <span class="admin-topbar-sep">&rsaquo;</span>
                         <strong class="admin-topbar-current"><?= ucfirst($adminNav) ?></strong>

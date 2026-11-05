@@ -1,5 +1,5 @@
 /**
- * CebuTech Hub - Enhanced Interactive Mobile & Desktop Script
+ * CubeTech Hub - Enhanced Interactive Mobile & Desktop Script
  * Handles:
  *  1. Mobile Navigation Drawer & Backdrop
  *  2. Collapsible Mobile Search/Filter Bar
@@ -397,6 +397,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     };
+    window.CubeToast = window.CebuToast;
 
     // ------------------------------------------------------------------------
     // 9. Instant Copy-to-Clipboard Micro-Feedback ([data-copy])

@@ -15,9 +15,9 @@ $flashes   = getFlashes();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($pageTitle) ?></title>
-    <link rel="icon" type="image/png" href="assets/images/Cebu-Logo.png">
-    <link rel="shortcut icon" type="image/png" href="assets/images/Cebu-Logo.png">
-    <link rel="apple-touch-icon" href="assets/images/Cebu-Logo.png">
+    <link rel="icon" type="image/png" href="assets/images/Cube-Logo.png">
+    <link rel="shortcut icon" type="image/png" href="assets/images/Cube-Logo.png">
+    <link rel="apple-touch-icon" href="assets/images/Cube-Logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="has-bottom-nav">
@@ -33,7 +33,7 @@ $flashes   = getFlashes();
     <header class="site-header">
         <div class="container header-inner">
             <a href="index.php" class="brand-logo">
-                <img src="assets/images/Cebu-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="brand-logo-img">
+                <img src="assets/images/Cube-Logo.png" alt="<?= e(STORE_NAME) ?> Logo" class="brand-logo-img">
                 <span class="brand-text-wrap">
                     <span><?= e(STORE_NAME) ?></span>
                     <span class="brand-sub">CubeTech Gear</span>

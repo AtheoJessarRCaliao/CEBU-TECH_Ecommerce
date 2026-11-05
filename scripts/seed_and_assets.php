@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * CebuTech Hub - CLI Database Reset & SVG Product Image Generator
+ * CubeTech Hub - CLI Database Reset & SVG Product Image Generator
  * Usage: php scripts/seed_and_assets.php [--reset-db]
  */
 

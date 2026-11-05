@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * CebuTech Hub - Automated Acceptance Test Suite (Section 17 Checks 01 - 10)
+ * CubeTech Hub - Automated Acceptance Test Suite (Section 17 Checks 01 - 10)
  * Run via CLI: php tests/acceptance_checks.php
  */
 
@@ -369,7 +369,7 @@ $repo->resetDatabase();
 Cart::clear();
 
 echo "================================================================================\n";
-echo "CEBUTECH HUB - ACCEPTANCE TEST SUITE RESULTS (" . $repo->getStorageEngineName() . ")\n";
+echo "CUBETECH HUB - ACCEPTANCE TEST SUITE RESULTS (" . $repo->getStorageEngineName() . ")\n";
 echo "================================================================================\n";
 foreach ($results as $r) {
     echo sprintf("[%s] Check %s: %s\n       Note: %s\n\n", $r['status'], $r['id'], $r['title'], $r['note']);

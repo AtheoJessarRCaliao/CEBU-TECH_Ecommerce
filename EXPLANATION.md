@@ -1,4 +1,4 @@
-# CebuTech Hub — Technical Explanation & Architecture Document
+# CubeTech Hub — Technical Explanation & Architecture Document
 
 **Web Development Internship Assessment | CubeTech Innovations**
 
@@ -6,7 +6,7 @@
 
 ## 1. System Flow Summary
 
-CebuTech Hub coordinates two user contexts over a unified relational data layer: a **Customer Storefront** and an **Admin Dashboard**.
+CubeTech Hub coordinates two user contexts over a unified relational data layer: a **Customer Storefront** and an **Admin Dashboard**.
 
 ```mermaid
 flowchart TD
@@ -43,7 +43,7 @@ flowchart TD
 2. **Product Details & Related Items (`product.php`)**:
    - Renders authentic product photography, live stock badge, quantity selector capped at current available stock, and up to 3 active related items in the same category.
 3. **Cart Persistence & Integer Math (`cart.php`)**:
-   - State is stored in PHP `$_SESSION['cart']` and mirrored to an HMAC-signed cookie (`cebutech_cart_sig`) to persist across tab reloads and browser sessions without tampering risk.
+   - State is stored in PHP `$_SESSION['cart']` and mirrored to an HMAC-signed cookie (`cubetech_cart_sig`) to persist across tab reloads and browser sessions without tampering risk.
    - Repeated additions of the same product ID merge into an incremented quantity rather than creating duplicate lines.
    - All arithmetic uses integer centavos (`price_cents * quantity`), guaranteeing `Subtotal == Total` with zero floating-point imprecision (`PHP 325.50` test case).
 4. **Checkout Concurrency Verification (`checkout.php`)**:
@@ -207,7 +207,7 @@ Across comprehensive automated and manual verification, **zero blocking defects 
    - The admin authentication mechanism relies on a demo session check (`app/Core/Auth.php`) using pre-configured assessment credentials.
    - *Design Note*: This is implemented intentionally to fulfill the requirements of the offline assessment evaluation and is clearly labeled as unsuitable for production deployment without enterprise OAuth/RBAC.
 2. **Single-Host Write Locking**:
-   - SQLite operates with file-level concurrency locking on writes (`storage/cebutech.sqlite`).
+   - SQLite operates with file-level concurrency locking on writes (`storage/cubetech.sqlite`).
    - *Design Note*: Ideal for single-instance applications, local evaluations, and containerized deployments; high-volume multi-region clustering would migrate the existing schema to PostgreSQL.
 3. **Local Filesystem Media Storage**:
    - Product imagery resides in `public/assets/images/`. A cloud production build would route uploads to an S3-compatible bucket or CDN.

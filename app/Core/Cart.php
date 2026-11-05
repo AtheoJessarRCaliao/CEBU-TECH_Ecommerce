@@ -4,14 +4,14 @@ declare(strict_types=1);
 require_once __DIR__ . '/Repository.php';
 
 /**
- * CebuTech Hub - Persistent Shopping Cart Manager
+ * CubeTech Hub - Persistent Shopping Cart Manager
  * Implements Section 8 (Shopping Cart) & Section 9 (Checkout Price/Availability Recheck)
  */
 class Cart
 {
-    private const SESSION_KEY = 'cebutech_cart';
-    private const COOKIE_NAME = 'cebutech_cart_backup';
-    private const COOKIE_SECRET = 'cebutech-assessment-cart-secret-key-2026';
+    private const SESSION_KEY = 'cubetech_cart';
+    private const COOKIE_NAME = 'cubetech_cart_backup';
+    private const COOKIE_SECRET = 'cubetech-assessment-cart-secret-key-2026';
 
     /**
      * Ensure cart is initialized in session (restoring from signed cookie if session is fresh)
@@ -19,7 +19,12 @@ class Cart
     private static function init(): void
     {
         if (!isset($_SESSION[self::SESSION_KEY]) || !is_array($_SESSION[self::SESSION_KEY])) {
-            $_SESSION[self::SESSION_KEY] = self::loadFromCookie();
+            // Restore from legacy session key if available
+            if (isset($_SESSION['cebutech_cart']) && is_array($_SESSION['cebutech_cart'])) {
+                $_SESSION[self::SESSION_KEY] = $_SESSION['cebutech_cart'];
+            } else {
+                $_SESSION[self::SESSION_KEY] = self::loadFromCookie();
+            }
         }
     }
 
@@ -41,16 +46,18 @@ class Cart
 
     private static function loadFromCookie(): array
     {
-        if (empty($_COOKIE[self::COOKIE_NAME])) {
+        $raw = $_COOKIE[self::COOKIE_NAME] ?? $_COOKIE['cebutech_cart_backup'] ?? '';
+        if (empty($raw)) {
             return [];
         }
-        $decoded = base64_decode((string)$_COOKIE[self::COOKIE_NAME], true);
+        $decoded = base64_decode((string)$raw, true);
         if (!$decoded || strpos($decoded, '|') === false) {
             return [];
         }
         [$sig, $json] = explode('|', $decoded, 2);
         $expectedSig = hash_hmac('sha256', $json, self::COOKIE_SECRET);
-        if (!hash_equals($expectedSig, $sig)) {
+        $legacySig   = hash_hmac('sha256', $json, 'cebutech-assessment-cart-secret-key-2026');
+        if (!hash_equals($expectedSig, $sig) && !hash_equals($legacySig, $sig)) {
             return [];
         }
         $data = json_decode($json, true);

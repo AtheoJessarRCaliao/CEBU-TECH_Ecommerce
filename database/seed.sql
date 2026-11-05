@@ -1,5 +1,5 @@
 -- ============================================================================
--- CebuTech Hub (CubeTech Innovations Assessment) - Initial Seed Data
+-- CubeTech Hub (CubeTech Innovations Assessment) - Initial Seed Data
 -- ============================================================================
 
 INSERT INTO categories (id, name, slug, description) VALUES

@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../Config/config.php';
 
 /**
- * CebuTech Hub - Data Repository & Authoritative Business Logic
+ * CubeTech Hub - Data Repository & Authoritative Business Logic
  * Uses SQLite (PDO) backed by database/schema.sql & database/seed.sql.
  * Also supports JSON-file storage mirror/fallback for portability.
  */
