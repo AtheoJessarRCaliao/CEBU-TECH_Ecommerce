@@ -32,7 +32,7 @@ require_once __DIR__ . '/../../app/Views/layouts/admin_header.php';
     <div>
         <h1 class="section-title">Admin Dashboard Overview</h1>
         <p style="color: var(--text-secondary); font-size: 0.9rem;">
-            Real-time metrics synchronized with the customer storefront (<?= e($repo->getStorageEngineName()) ?>).
+            Real-time metrics synchronized with the customer storefront.
         </p>
     </div>
 

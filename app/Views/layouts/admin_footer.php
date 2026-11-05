@@ -7,7 +7,7 @@ $currentAdminNav = $adminNav ?? 'overview';
             <footer class="admin-footer">
                 <div class="admin-footer-inner">
                     <span>&copy; <?= date('Y') ?> <?= e(STORE_NAME) ?> Admin Management Console</span>
-                    <span>Shared Engine: <strong><?= e(Repository::getInstance()->getStorageEngineName()) ?></strong></span>
+                    
                 </div>
             </footer>
         </div><!-- /.admin-main-wrap -->

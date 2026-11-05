@@ -87,10 +87,6 @@ $notifUnread  = Repository::getInstance()->getUnreadNotificationCount();
                     <span>Log Out</span>
                 </a>
             </nav>
-
-            <div class="admin-sidebar-footer">
-                <span class="admin-db-status">DB: <?= e(Repository::getInstance()->getStorageEngineName()) ?></span>
-            </div>
         </aside>
 
         <div class="admin-sidebar-backdrop" data-admin-sidebar-backdrop="true"></div>

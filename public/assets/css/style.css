@@ -4245,3 +4245,8 @@ body.admin-body {
     justify-content: center !important;
     text-align: center;
 }
+
+.admin-footer-inner {
+    justify-content: center !important;
+    text-align: center;
+}
