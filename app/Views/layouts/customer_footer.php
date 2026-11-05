@@ -89,7 +89,7 @@ $currentNav       = $activeNav ?? '';
 
             <div class="footer-bottom">
                 <span>&copy; <?= date('Y') ?> <?= e(STORE_NAME) ?>. All rights reserved.</span>
-                <span>Powered by <strong><?= e(Repository::getInstance()->getStorageEngineName()) ?></strong> Engine</span>
+                
             </div>
         </div>
     </footer>

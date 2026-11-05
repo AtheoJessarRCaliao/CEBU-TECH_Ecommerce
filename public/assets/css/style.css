@@ -4239,3 +4239,9 @@ body.admin-body {
         max-width: none;
     }
 }
+
+
+.footer-bottom {
+    justify-content: center !important;
+    text-align: center;
+}
