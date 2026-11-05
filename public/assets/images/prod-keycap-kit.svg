@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420" width="600" height="420">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#27272a"/>
+      <stop offset="100%" stop-color="#3f3f46"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="420" fill="url(#bg)"/>
+  <circle cx="510" cy="80" r="140" fill="#facc15" opacity="0.07"/>
+  <circle cx="90" cy="350" r="160" fill="#facc15" opacity="0.05"/>
+  <rect x="36" y="32" width="190" height="30" rx="15" fill="#facc15" opacity="0.18"/>
+  <text x="131" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#facc15" text-anchor="middle" letter-spacing="1">MAINTENANCE KIT</text>
+  <rect x="288" y="105" width="24" height="75" rx="6" fill="#facc15" opacity="0.8"/><path d="M272 180 L265 250 L300 265 L335 250 L328 180 Z" fill="none" stroke="#facc15" stroke-width="4"/>
+  <text x="300" y="335" font-family="system-ui, -apple-system, sans-serif" font-size="25" font-weight="800" fill="#f8fafc" text-anchor="middle">Puller & Brush Kit</text>
+  <text x="300" y="365" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500" fill="#94a3b8" text-anchor="middle">PHP 85.50 Assessment Item</text>
+</svg>

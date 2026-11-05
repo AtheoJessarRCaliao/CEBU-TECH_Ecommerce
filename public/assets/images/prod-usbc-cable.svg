@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420" width="600" height="420">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#172554"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="420" fill="url(#bg)"/>
+  <circle cx="510" cy="80" r="140" fill="#60a5fa" opacity="0.07"/>
+  <circle cx="90" cy="350" r="160" fill="#60a5fa" opacity="0.05"/>
+  <rect x="36" y="32" width="190" height="30" rx="15" fill="#60a5fa" opacity="0.18"/>
+  <text x="131" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#60a5fa" text-anchor="middle" letter-spacing="1">60W PD BRAIDED</text>
+  <path d="M180 210 C210 120, 390 260, 420 160" fill="none" stroke="#60a5fa" stroke-width="8" stroke-linecap="round"/><rect x="155" y="200" width="34" height="22" rx="5" fill="#60a5fa"/><rect x="410" y="148" width="34" height="22" rx="5" fill="#60a5fa"/>
+  <text x="300" y="335" font-family="system-ui, -apple-system, sans-serif" font-size="25" font-weight="800" fill="#f8fafc" text-anchor="middle">USB-C Cable 1.5m</text>
+  <text x="300" y="365" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500" fill="#94a3b8" text-anchor="middle">PHP 120.00 Assessment Item</text>
+</svg>

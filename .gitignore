@@ -1,0 +1,13 @@
+# Runtime storage files (auto-created and seeded on startup)
+storage/*.sqlite
+storage/*.sqlite-journal
+storage/*.sqlite-wal
+storage/*.sqlite-shm
+storage/*.json
+public/assets/images/prod-upload-*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
