@@ -152,27 +152,17 @@ require_once __DIR__ . '/../app/Views/layouts/customer_header.php';
         </div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-color);">
-        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <a href="products.php" class="btn btn-primary">&larr; Continue Shopping</a>
-            <?php if ($canCancel): ?>
-                <form method="post" action="confirmation.php?order=<?= urlencode($order['order_number']) ?>" data-confirm="Are you sure you want to cancel this order? This will release reserved stock back to available inventory.">
-                    <input type="hidden" name="csrf_token" value="<?= csrfToken() ?>">
-                    <input type="hidden" name="action" value="cancel_order">
-                    <button type="submit" class="btn btn-danger btn-sm">
-                        &#10006; Cancel Order
-                    </button>
-                </form>
-            <?php endif; ?>
-        </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="track.php?order=<?= urlencode($order['order_number']) ?>" class="btn btn-secondary">Track Order Status</a>
-            <a href="admin/order.php?id=<?= (int)$order['id'] ?>" class="btn btn-secondary">Manage Order in Admin &rarr;</a>
-        </div>
-    </div>
-            <a href="track.php?order=<?= urlencode($order['order_number']) ?>" class="btn btn-secondary">Track Order Status</a>
-            <a href="admin/order.php?id=<?= (int)$order['id'] ?>" class="btn btn-secondary">Manage Order in Admin &rarr;</a>
-        </div>
+    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+        <a href="products.php" class="btn btn-primary">&larr; Continue Shopping</a>
+        <?php if ($canCancel): ?>
+            <form method="post" action="confirmation.php?order=<?= urlencode($order['order_number']) ?>" data-confirm="Are you sure you want to cancel this order? This will release reserved stock back to available inventory." style="margin: 0;">
+                <input type="hidden" name="csrf_token" value="<?= csrfToken() ?>">
+                <input type="hidden" name="action" value="cancel_order">
+                <button type="submit" class="btn btn-danger">
+                    &#10006; Cancel Order
+                </button>
+            </form>
+        <?php endif; ?>
     </div>
 </div>
 

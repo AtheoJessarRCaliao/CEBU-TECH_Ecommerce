@@ -316,3 +316,4 @@ In accordance with academic and corporate integrity guidelines, the tools and re
   - CSS Grid auto-fit and minmax sizing patterns for mobile-friendly cards.
 - **Photography Assets**:
   - Authentic product photography sourced from Unsplash under the Unsplash open commercial license, optimized and stored locally at `public/assets/images/*.jpg`.
+
